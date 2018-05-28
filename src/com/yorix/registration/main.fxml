@@ -19,14 +19,16 @@
     </HBox>
     <TableView>
       <columns>
-          <TableColumn prefWidth="50.0" text="%tbl.clm.id" />
-          <TableColumn minWidth="50.0" prefWidth="100.0" text="%tbl.clm.carNum" />
+          <TableColumn prefWidth="100.0" text="%tbl.clm.carNum" />
           <TableColumn minWidth="50.0" prefWidth="100.0" text="%tbl.clm.driversPhone" />
-          <TableColumn prefWidth="50.0" text="%tbl.clm.broker" />
+          <TableColumn maxWidth="50.0" minWidth="50.0" prefWidth="50.0" text="%tbl.clm.broker" />
       </columns>
+      <columnResizePolicy>
+         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+      </columnResizePolicy>
     </TableView>
     <HBox spacing="10.0">
-        <Label text="%lbl.addNotice"/>
-        <Button mnemonicParsing="false" text="%btn.addNotice"/>
+        <Label text="%lbl.addNotice" />
+        <Button mnemonicParsing="false" onAction="#createNotice" text="%btn.addNotice" />
     </HBox>
 </VBox>

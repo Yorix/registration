@@ -18,8 +18,12 @@ public class Main extends Application {
         loader.setResources(ResourceBundle.getBundle("com.yorix.registration.bundles.Locale", new Locale("ru")));
         Parent root = loader.load();
         primaryStage.setTitle(loader.getResources().getString("title"));
-        primaryStage.setScene(new Scene(root, 300, 275));
+        primaryStage.setScene(new Scene(root, 400, 300));
         primaryStage.show();
+
+        Lorry lorry = new Lorry("", "", Broker.EXIM);
+
+        lorry.addCurrentDate();
     }
 
 
