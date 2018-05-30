@@ -1,5 +1,6 @@
 package com.yorix.registration;
 
+import com.yorix.registration.controllers.MainController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -14,11 +15,13 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("main.fxml"));
+        FXMLLoader.load(getClass().getResource("main.fxml"));
         loader.setResources(ResourceBundle.getBundle("com.yorix.registration.bundles.Locale", new Locale("ru")));
         Parent root = loader.load();
         primaryStage.setTitle(loader.getResources().getString("title"));
         primaryStage.setScene(new Scene(root, 400, 300));
+        MainController mainController = loader.getController();
+        mainController.setMainStage(primaryStage);
         primaryStage.show();
 
         Lorry lorry = new Lorry("", "", Broker.EXIM);

@@ -9,26 +9,27 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox spacing="10.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.yorix.registration.Controller">
+<VBox spacing="10.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.yorix.registration.controllers.MainController">
     <padding>
-        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
     </padding>
     <HBox spacing="10.0">
-        <TextField promptText="%lbl.search" />
-        <Button mnemonicParsing="false" text="%btn.search" />
+        <TextField promptText="%lbl.search"/>
+        <Button mnemonicParsing="false" text="%btn.search"/>
     </HBox>
     <TableView>
-      <columns>
-          <TableColumn prefWidth="100.0" text="%tbl.clm.carNum" />
-          <TableColumn minWidth="50.0" prefWidth="100.0" text="%tbl.clm.driversPhone" />
-          <TableColumn maxWidth="50.0" minWidth="50.0" prefWidth="50.0" text="%tbl.clm.broker" />
-      </columns>
-      <columnResizePolicy>
-         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-      </columnResizePolicy>
+        <columns>
+            <TableColumn prefWidth="100.0" text="%tbl.clm.carNum"/>
+            <TableColumn minWidth="50.0" prefWidth="100.0" text="%tbl.clm.driversPhone"/>
+            <TableColumn maxWidth="50.0" minWidth="50.0" prefWidth="50.0" text="%tbl.clm.broker"/>
+        </columns>
+        <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+        </columnResizePolicy>
     </TableView>
     <HBox spacing="10.0">
-        <Label text="%lbl.addNotice" />
-        <Button mnemonicParsing="false" onAction="#createNotice" text="%btn.addNotice" />
+        <Label text="%lbl.addNotice"/>
+        <Button mnemonicParsing="false" onAction="#createNotice" text="%btn.addNotice"/>
     </HBox>
 </VBox>
