@@ -4,11 +4,13 @@ import com.yorix.registration.io.Reader;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-public class LorriesList {
+import java.io.Serializable;
+
+public class LorriesList implements Serializable {
     private ObservableList<Lorry> lorries;
 
     public LorriesList() {
-        lorries = FXCollections.observableArrayList(Reader.read());
+        lorries = Reader.read();
     }
 
     public void add(Lorry lorry) {

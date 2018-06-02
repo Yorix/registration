@@ -1,10 +1,9 @@
 package com.yorix.registration.controllers;
 
 import com.yorix.registration.Broker;
+import com.yorix.registration.LorriesList;
 import com.yorix.registration.Lorry;
-import com.yorix.registration.io.Reader;
 import com.yorix.registration.io.Writer;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -14,7 +13,6 @@ import javafx.scene.control.ToggleGroup;
 import javafx.stage.Stage;
 
 import java.net.URL;
-import java.util.LinkedList;
 import java.util.ResourceBundle;
 
 public class AddNewLorryController implements Initializable {
@@ -22,10 +20,10 @@ public class AddNewLorryController implements Initializable {
     private TextField carId, phoneNum, consignee;
     @FXML
     private RadioButton rdbPolitrans, rdbExim;
+
     private Broker broker;
     private Stage currentStage;
-
-    private ObservableList<Lorry> lorries;
+    private LorriesList lorries;
 
 
     @Override
@@ -44,8 +42,8 @@ public class AddNewLorryController implements Initializable {
         if (phoneNum.getText().length() < 10) return; //TODO добавить сообщение о неверном номере телефона
 
         lorries.add(new Lorry(carId.getText(), phoneNum.getText(), consignee.getText(), broker));
-        Writer.write(lorries);
-        System.out.println(lorries); //TODO удалить
+        Writer.write(lorries.getLorries());
+        System.out.println(lorries.getLorries()); //TODO удалить
 
         clearFields();
         currentStage.hide();
@@ -63,7 +61,7 @@ public class AddNewLorryController implements Initializable {
         this.currentStage = currentStage;
     }
 
-    public void setLorries(ObservableList<Lorry> lorries) {
+    public void setLorries(LorriesList lorries) {
         this.lorries = lorries;
     }
 }

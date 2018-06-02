@@ -4,10 +4,7 @@ import com.yorix.registration.Broker;
 import com.yorix.registration.LorriesList;
 import com.yorix.registration.Lorry;
 import com.yorix.registration.io.Reader;
-import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -16,7 +13,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -32,12 +28,11 @@ public class MainController implements Initializable {
     @FXML
     private TableColumn<Lorry, Broker> tblClmBroker;
 
-    private Stage editDialogStage;
+    private Stage addDialogStage;
     private Stage mainStage;
     private Parent editWindow;
     private ResourceBundle bundle;
     private FXMLLoader loader;
-    private AddNewLorryController addNewLorryController;
 
     private LorriesList lorries;
 
@@ -59,26 +54,13 @@ public class MainController implements Initializable {
     }
 
     private void initListeners() {
-        lorries.getLorries().addListener(new ListChangeListener<Lorry>() {
-            @Override
-            public void onChanged(Change<? extends Lorry> c) {
+        lorries.getLorries().addListener((ListChangeListener<Lorry>) c -> {
 //                updateCountLabel(); todo create method
-            }
         });
 
-        tblLorries.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                if (event.getClickCount() == 2) editNote();
-            }
+        tblLorries.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) editNote();
         });
-    }
-
-    public void editNote() {
-        Lorry selectedPerson = (Lorry) tblLorries.getSelectionModel().getSelectedItem();
-        if (selectedPerson == null) return;
-//        editDialogController.setPerson(selectedPerson); todo написать метод
-//        showDialog();
     }
 
     private void initLoader() {
@@ -90,24 +72,31 @@ public class MainController implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        addNewLorryController = loader.getController();
-//        addNewLorryController.setLorries(lorries.getLorries());
+        AddNewLorryController addNewLorryController = loader.getController();
+        addNewLorryController.setLorries(lorries);
     }
 
     public void createNote() {
-        if (editDialogStage == null) {
-            editDialogStage = new Stage();
-            editDialogStage.setTitle(bundle.getString("addNewNotice"));
-            editDialogStage.setResizable(false);
-            editDialogStage.setScene(new Scene(editWindow));
-            editDialogStage.initModality(Modality.WINDOW_MODAL);
-            editDialogStage.initOwner(mainStage);
+        if (addDialogStage == null) {
+            addDialogStage = new Stage();
+            addDialogStage.setTitle(bundle.getString("addNewNotice"));
+            addDialogStage.setResizable(false);
+            addDialogStage.setScene(new Scene(editWindow));
+            addDialogStage.initModality(Modality.WINDOW_MODAL);
+            addDialogStage.initOwner(mainStage);
 
             AddNewLorryController addNewLorryController = loader.getController();
-            addNewLorryController.setCurrentStage(editDialogStage);
+            addNewLorryController.setCurrentStage(addDialogStage);
         }
 
-        editDialogStage.show();
+        addDialogStage.show();
+    }
+
+    public void editNote() {
+        Lorry selectedLorry = tblLorries.getSelectionModel().getSelectedItem();
+        if (selectedLorry == null) return;
+//        editDialogController.setPerson(selectedLorry); todo написать метод
+//        showDialog();
     }
 
     public void setMainStage(Stage mainStage) {
