@@ -15,7 +15,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
         FXMLLoader loader = new FXMLLoader();
-        FXMLLoader.load(getClass().getResource("main.fxml"));
+        loader.setLocation(getClass().getResource("fxml/main.fxml"));
         loader.setResources(ResourceBundle.getBundle("com.yorix.registration.bundles.Locale", new Locale("ru")));
         Parent root = loader.load();
         primaryStage.setTitle(loader.getResources().getString("title"));
@@ -23,10 +23,6 @@ public class Main extends Application {
         MainController mainController = loader.getController();
         mainController.setMainStage(primaryStage);
         primaryStage.show();
-
-        Lorry lorry = new Lorry("", "", Broker.EXIM);
-
-        lorry.addCurrentDate();
     }
 
 

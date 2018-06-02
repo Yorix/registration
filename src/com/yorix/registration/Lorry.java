@@ -2,51 +2,49 @@ package com.yorix.registration;
 
 import javafx.beans.property.SimpleStringProperty;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class Lorry {
+public class Lorry implements Serializable {
     private SimpleStringProperty idNumber;
     private SimpleStringProperty phoneNumber;
-    private List<FormattedDate> dates;
     private Broker broker;
+    private List<Carriage> carriages;
 
-    public Lorry(String idNumber, String phoneNumber, Broker broker) {
+    public Lorry(String idNumber, String phoneNumber, String consignee, Broker broker) {
         this.idNumber = new SimpleStringProperty(idNumber);
         this.phoneNumber = new SimpleStringProperty(phoneNumber);
-        dates = new LinkedList<>();
-        dates.add(new FormattedDate());
+        carriages = new LinkedList<>();
+        carriages.add(new Carriage(new FormattedDate(), consignee, broker));
         this.broker = broker;
     }
 
-    public void addCurrentDate() {
-        dates.add(new FormattedDate());
+    public List<Carriage> getCarriages() {
+        return carriages;
     }
 
-    public List<FormattedDate> getDates() {
-        return dates;
+    public void setBroker() {
+        int p = 0;
+        int e = 0;
+        for (Carriage carriage : carriages) {
+            if (carriage.getBroker() == Broker.POLITRANS) p++;
+            else e++;
+        }
+        if (p == e) broker = Broker.PE;
+        else broker = p > e ? Broker.POLITRANS : Broker.EXIM;
     }
 
-    public String getIdNumber() {
-        return idNumber.get();
+    public String getBrokerVal() {
+        return broker.toString();
     }
 
-    public SimpleStringProperty idNumberProperty() {
-        return idNumber;
-    }
-
-    public void setIdNumber(String idNumber) {
-        this.idNumber.set(idNumber);
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber.get();
-    }
-
-    public SimpleStringProperty phoneNumberProperty() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber.set(phoneNumber);
+    @Override
+    public String toString() {
+        return "\nLorry{" +
+                "idNumber=" + idNumber +
+                ", phoneNumber=" + phoneNumber +
+                ", broker=" + broker +
+                ", carriages=" + carriages +
+                "}";
     }
 }

@@ -1,9 +1,10 @@
 package com.yorix.registration;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-public class FormattedDate {
+public class FormattedDate implements Serializable {
     private GregorianCalendar date;
 
     public FormattedDate() {
