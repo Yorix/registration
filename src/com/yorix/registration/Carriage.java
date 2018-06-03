@@ -1,10 +1,8 @@
 package com.yorix.registration;
 
-import javafx.beans.property.SimpleStringProperty;
-
 import java.io.Serializable;
 
-public class Carriage implements Serializable {
+public class Carriage implements Serializable{
 
     private FormattedDate date;
     private Broker broker;

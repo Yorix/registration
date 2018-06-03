@@ -22,8 +22,8 @@
     </HBox>
     <TableView fx:id="tblLorries">
         <columns>
-            <TableColumn fx:id="tblClmCarID" prefWidth="100.0" text="%tbl.clm.carNum" />
-            <TableColumn fx:id="tblClmDriversPhone" minWidth="50.0" prefWidth="100.0" text="%tbl.clm.driversPhone" />
+            <TableColumn fx:id="tblClmCarID" minWidth="70.0" prefWidth="100.0" text="%tbl.clm.carNum" />
+            <TableColumn fx:id="tblClmDriversPhone" minWidth="100.0" prefWidth="100.0" text="%tbl.clm.driversPhone" />
             <TableColumn fx:id="tblClmBroker" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" text="%tbl.clm.broker" />
         </columns>
         <columnResizePolicy>

@@ -1,24 +1,33 @@
 package com.yorix.registration;
 
-import com.yorix.registration.io.Reader;
+import com.yorix.registration.io.InOut;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.io.Serializable;
-
-public class LorriesList implements Serializable {
+public class LorriesList {
     private ObservableList<Lorry> lorries;
 
     public LorriesList() {
-        lorries = Reader.read();
+        lorries = FXCollections.observableArrayList(InOut.read());
+    }
+
+    public LorriesList(int empty) {
+        lorries = FXCollections.observableArrayList();
     }
 
     public void add(Lorry lorry) {
         lorries.add(lorry);
+        InOut.write(this);
     }
 
     public ObservableList<Lorry> getLorries() {
         return lorries;
+    }
+
+    public Lorry[] getLorriesAsArray() {
+
+
+        return lorries.toArray(new Lorry[0]);
     }
 
     @Override

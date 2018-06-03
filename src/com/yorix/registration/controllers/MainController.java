@@ -3,7 +3,6 @@ package com.yorix.registration.controllers;
 import com.yorix.registration.Broker;
 import com.yorix.registration.LorriesList;
 import com.yorix.registration.Lorry;
-import com.yorix.registration.io.Reader;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -45,7 +44,7 @@ public class MainController implements Initializable {
 
         tblClmCarID.setCellValueFactory(new PropertyValueFactory<>("idNumber"));
         tblClmDriversPhone.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
-//        tblClmBroker.setCellValueFactory(new PropertyValueFactory<>("broker"));
+        tblClmBroker.setCellValueFactory(new PropertyValueFactory<>("broker"));
         tblLorries.setItems(lorries.getLorries());
 
         initListeners();

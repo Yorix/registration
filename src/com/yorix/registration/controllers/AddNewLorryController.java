@@ -3,7 +3,6 @@ package com.yorix.registration.controllers;
 import com.yorix.registration.Broker;
 import com.yorix.registration.LorriesList;
 import com.yorix.registration.Lorry;
-import com.yorix.registration.io.Writer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -42,8 +41,6 @@ public class AddNewLorryController implements Initializable {
         if (phoneNum.getText().length() < 10) return; //TODO добавить сообщение о неверном номере телефона
 
         lorries.add(new Lorry(carId.getText(), phoneNum.getText(), consignee.getText(), broker));
-        Writer.write(lorries.getLorries());
-        System.out.println(lorries.getLorries()); //TODO удалить
 
         clearFields();
         currentStage.hide();
