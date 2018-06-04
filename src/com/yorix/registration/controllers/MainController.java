@@ -4,6 +4,7 @@ import com.yorix.registration.Broker;
 import com.yorix.registration.LorriesList;
 import com.yorix.registration.Lorry;
 import javafx.collections.ListChangeListener;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -27,11 +28,12 @@ public class MainController implements Initializable {
     @FXML
     private TableColumn<Lorry, Broker> tblClmBroker;
 
-    private Stage addDialogStage;
     private Stage mainStage;
+    private Stage addNewLorryStage;
+    private Stage currentLorryStage;
     private Parent editWindow;
     private ResourceBundle bundle;
-    private FXMLLoader loader;
+    private FXMLLoader addNewLorryloader;
 
     private LorriesList lorries;
 
@@ -58,42 +60,60 @@ public class MainController implements Initializable {
         });
 
         tblLorries.setOnMouseClicked(event -> {
-            if (event.getClickCount() == 2) editNote();
+            if (event.getClickCount() == 2) openNote(tblLorries.getSelectionModel().getSelectedItem());
         });
     }
 
     private void initLoader() {
-        loader = new FXMLLoader(getClass().getResource("../fxml/addNewLorry.fxml"));
-        loader.setResources(bundle);
+        addNewLorryloader = new FXMLLoader(getClass().getResource("../fxml/addNewLorry.fxml"));
+        addNewLorryloader.setResources(bundle);
 
         try {
-            editWindow = loader.load();
+            editWindow = addNewLorryloader.load();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        AddNewLorryController addNewLorryController = loader.getController();
+        AddNewLorryController addNewLorryController = addNewLorryloader.getController();
         addNewLorryController.setLorries(lorries);
+        addNewLorryController.setMainController(this);
     }
 
     public void createNote() {
-        if (addDialogStage == null) {
-            addDialogStage = new Stage();
-            addDialogStage.setTitle(bundle.getString("addNewNotice"));
-            addDialogStage.setResizable(false);
-            addDialogStage.setScene(new Scene(editWindow));
-            addDialogStage.initModality(Modality.WINDOW_MODAL);
-            addDialogStage.initOwner(mainStage);
+        if (addNewLorryStage == null) {
+            addNewLorryStage = new Stage();
+            addNewLorryStage.setTitle(bundle.getString("addNewNotice"));
+            addNewLorryStage.setResizable(false);
+            addNewLorryStage.setScene(new Scene(editWindow));
+            addNewLorryStage.initModality(Modality.WINDOW_MODAL);
+            addNewLorryStage.initOwner(mainStage);
 
-            AddNewLorryController addNewLorryController = loader.getController();
-            addNewLorryController.setCurrentStage(addDialogStage);
+            AddNewLorryController addNewLorryController = addNewLorryloader.getController();
+            addNewLorryController.setCurrentStage(addNewLorryStage);
         }
 
-        addDialogStage.show();
+        addNewLorryStage.show();
     }
 
-    public void editNote() {
-        Lorry selectedLorry = tblLorries.getSelectionModel().getSelectedItem();
+    public void openNote(ActionEvent actionEvent) {
+        openNote(tblLorries.getSelectionModel().getSelectedItem());
+    }
+
+    public void openNote(Lorry selectedLorry) {
         if (selectedLorry == null) return;
+        if (currentLorryStage == null) {
+            currentLorryStage = new Stage();
+            currentLorryStage.setTitle(bundle.getString("addNewNotice"));
+            currentLorryStage.setResizable(false);
+            currentLorryStage.setScene(new Scene(editWindow));
+            currentLorryStage.initModality(Modality.WINDOW_MODAL);
+            currentLorryStage.initOwner(mainStage);
+
+//            AddNewLorryController addNewLorryController = addNewLorryloader.getController();
+//            addNewLorryController.setCurrentStage(addNewLorryStage);
+        }
+
+        currentLorryStage.show();
+//        System.out.println("!!!!!!!!!!!!"); //todo delete
 //        editDialogController.setPerson(selectedLorry); todo написать метод
 //        showDialog();
     }

@@ -6,9 +6,11 @@ import com.yorix.registration.Lorry;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.net.URL;
@@ -19,6 +21,8 @@ public class AddNewLorryController implements Initializable {
     private TextField carId, phoneNum, consignee;
     @FXML
     private RadioButton rdbPolitrans, rdbExim;
+
+    private MainController mainController;
 
     private Broker broker;
     private Stage currentStage;
@@ -35,10 +39,19 @@ public class AddNewLorryController implements Initializable {
     public void addNewLorry(ActionEvent actionEvent) {
         if (rdbPolitrans.isSelected()) broker = Broker.POLITRANS;
         else if (rdbExim.isSelected()) broker = Broker.EXIM;
-        else return; //TODO добавить требование выбора фирмы
+        else return; //todo добавить требование выбора фирмы
 
-        if (carId.getText().isEmpty()) return; //TODO добавить требование ввода номера машины
-        if (phoneNum.getText().length() < 10) return; //TODO добавить сообщение о неверном номере телефона
+
+        if (phoneNum.getText().length() < 10) return; //todo добавить сообщение о неверном номере телефона
+        if (carId.getText().isEmpty()) return; //todo добавить требование ввода номера машины
+        for (Lorry lorry : lorries.getLorries()) {
+            if (lorry.getIdNumber().equals(carId.getText())) {
+                mainController.openNote(lorry);
+                clearFields();
+                currentStage.hide();
+                return;
+            }
+        }
 
         lorries.add(new Lorry(carId.getText(), phoneNum.getText(), consignee.getText(), broker));
 
@@ -52,6 +65,10 @@ public class AddNewLorryController implements Initializable {
         consignee.clear();
         rdbPolitrans.setSelected(false);
         rdbExim.setSelected(false);
+    }
+
+    public void setMainController(MainController mainController) {
+        this.mainController = mainController;
     }
 
     public void setCurrentStage(Stage currentStage) {

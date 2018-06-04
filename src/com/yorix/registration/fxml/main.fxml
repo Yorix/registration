@@ -18,7 +18,7 @@
     </HBox>
     <HBox spacing="10.0">
         <Button mnemonicParsing="false" onAction="#createNote" text="%btn.addNote" />
-      <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#editNote" text="%btn.editNote" />
+      <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#openNote" text="%btn.editNote" />
     </HBox>
     <TableView fx:id="tblLorries">
         <columns>
