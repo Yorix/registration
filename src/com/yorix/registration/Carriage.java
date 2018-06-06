@@ -1,17 +1,47 @@
 package com.yorix.registration;
 
-import java.io.Serializable;
+import javafx.beans.property.SimpleStringProperty;
 
-public class Carriage implements Serializable{
+import java.io.*;
+import java.util.GregorianCalendar;
+
+public class Carriage implements Externalizable {
 
     private FormattedDate date;
+    private SimpleStringProperty consignee;
     private Broker broker;
-    private String consignee;
+
+    public Carriage() {
+    }
 
     public Carriage(FormattedDate date, String consignee, Broker broker) {
         this.date = date;
         this.broker = broker;
-        this.consignee = consignee;
+        this.consignee = new SimpleStringProperty(consignee);
+    }
+
+    public FormattedDate getDate() {
+        return date;
+    }
+
+    public void setDate(FormattedDate date) {
+        this.date = date;
+    }
+
+    public String getConsignee() {
+        return consignee.get();
+    }
+
+    public SimpleStringProperty consigneeProperty() {
+        return consignee;
+    }
+
+    public void setConsignee(String consignee) {
+        this.consignee.set(consignee);
+    }
+
+    public void setBroker(Broker broker) {
+        this.broker = broker;
     }
 
     public Broker getBroker() {
@@ -22,8 +52,22 @@ public class Carriage implements Serializable{
     public String toString() {
         return "Carriage{" +
                 "date=" + date +
+                ", consignee='" + consignee + '\'' +
                 ", broker=" + broker +
-                ", consignee=" + consignee +
                 '}';
+    }
+
+    @Override
+    public void writeExternal(ObjectOutput out) throws IOException {
+        out.writeObject(date.getDate());
+        out.writeObject(consignee.getValue());
+        out.writeObject(broker);
+    }
+
+    @Override
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        date = new FormattedDate((GregorianCalendar) in.readObject());
+        consignee = new SimpleStringProperty(in.readObject().toString());
+        broker = (Broker) in.readObject();
     }
 }

@@ -3,9 +3,9 @@ package com.yorix.registration;
 import java.io.Serializable;
 
 public enum Broker implements Serializable{
-    POLITRANS, EXIM, PE;
+    POLITRANS, EXIM;
 
-    private String s = this.name().substring(0, 1);
+    private String s = this.name();
 
     @Override
     public String toString() {

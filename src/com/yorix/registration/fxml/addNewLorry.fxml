@@ -40,9 +40,7 @@
          </padding>
         </VBox>
     </AnchorPane>
-   <AnchorPane>
-      <children>
-         <Button mnemonicParsing="false" onAction="#addNewLorry" text="%btn.add" AnchorPane.rightAnchor="0.0" />
-      </children>
-   </AnchorPane>
+    <AnchorPane>
+        <Button mnemonicParsing="false" onAction="#addNewLorry" text="%btn.add" AnchorPane.rightAnchor="0.0"/>
+    </AnchorPane>
 </VBox>

@@ -17,6 +17,14 @@ public class LorriesList {
 
     public void add(Lorry lorry) {
         lorries.add(lorry);
+        save();
+    }
+
+    public void delete(Lorry lorry) {
+
+    }
+
+    public void save() {
         InOut.write(this);
     }
 
@@ -25,8 +33,6 @@ public class LorriesList {
     }
 
     public Lorry[] getLorriesAsArray() {
-
-
         return lorries.toArray(new Lorry[0]);
     }
 

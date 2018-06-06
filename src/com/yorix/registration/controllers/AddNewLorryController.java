@@ -6,11 +6,9 @@ import com.yorix.registration.Lorry;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.net.URL;
@@ -23,6 +21,7 @@ public class AddNewLorryController implements Initializable {
     private RadioButton rdbPolitrans, rdbExim;
 
     private MainController mainController;
+    private ResourceBundle bundle;
 
     private Broker broker;
     private Stage currentStage;
@@ -31,6 +30,7 @@ public class AddNewLorryController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        bundle = resources;
         ToggleGroup brokers = new ToggleGroup();
         rdbPolitrans.setToggleGroup(brokers);
         rdbExim.setToggleGroup(brokers);

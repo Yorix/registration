@@ -3,13 +3,12 @@ package com.yorix.registration;
 import javafx.beans.property.SimpleStringProperty;
 
 import java.io.*;
-import java.util.*;
 
 public class Lorry implements Externalizable {
     private SimpleStringProperty idNumber;
     private SimpleStringProperty phoneNumber;
     private Broker broker;
-    private List<Carriage> carriages;
+    private CarriagesList carriages;
 
     public Lorry() {
     }
@@ -17,8 +16,8 @@ public class Lorry implements Externalizable {
     public Lorry(String idNumber, String phoneNumber, String consignee, Broker broker) {
         this.idNumber = new SimpleStringProperty(idNumber);
         this.phoneNumber = new SimpleStringProperty(phoneNumber);
-        carriages = new LinkedList<>();
-        carriages.add(new Carriage(new FormattedDate(), consignee, broker));
+        carriages = new CarriagesList(this);
+        carriages.add(this, new Carriage(new FormattedDate(), consignee, broker));
         this.broker = broker;
     }
 
@@ -54,23 +53,23 @@ public class Lorry implements Externalizable {
         this.broker = broker;
     }
 
-    public void setCarriages(List<Carriage> carriages) {
-        this.carriages = carriages;
+    public CarriagesList getCarriages() {
+        return carriages;
     }
 
-    public List<Carriage> getCarriages() {
-        return carriages;
+    public void setCarriages(CarriagesList carriages) {
+        this.carriages = carriages;
     }
 
     public void setBroker() {
         int p = 0;
         int e = 0;
-        for (Carriage carriage : carriages) {
+        for (Carriage carriage : carriages.getCarriages()) {
             if (carriage.getBroker() == Broker.POLITRANS) p++;
             else e++;
         }
-        if (p == e) broker = Broker.PE;
-        else broker = p > e ? Broker.POLITRANS : Broker.EXIM;
+
+        broker = p >= e ? Broker.POLITRANS : Broker.EXIM;
     }
 
     public String getBrokerVal() {
@@ -100,6 +99,6 @@ public class Lorry implements Externalizable {
         idNumber = new SimpleStringProperty(in.readObject().toString());
         phoneNumber = new SimpleStringProperty(in.readObject().toString());
         broker = (Broker) in.readObject();
-        carriages = (List<Carriage>) in.readObject();
+        carriages = (CarriagesList) in.readObject();
     }
 }

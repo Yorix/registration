@@ -11,6 +11,10 @@ public class FormattedDate implements Serializable {
         date = new GregorianCalendar();
     }
 
+    public FormattedDate(GregorianCalendar date) {
+        this.date = date;
+    }
+
     public GregorianCalendar getDate() {
         return date;
     }

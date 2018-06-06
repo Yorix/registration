@@ -3,6 +3,7 @@ package com.yorix.registration.controllers;
 import com.yorix.registration.Broker;
 import com.yorix.registration.LorriesList;
 import com.yorix.registration.Lorry;
+import com.yorix.registration.io.InOut;
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -28,12 +29,15 @@ public class MainController implements Initializable {
     @FXML
     private TableColumn<Lorry, Broker> tblClmBroker;
 
+    private ResourceBundle bundle;
     private Stage mainStage;
     private Stage addNewLorryStage;
     private Stage currentLorryStage;
-    private Parent editWindow;
-    private ResourceBundle bundle;
-    private FXMLLoader addNewLorryloader;
+    private Parent addNewLorryWindow;
+    private Parent currentLorryWindow;
+    private FXMLLoader addNewLorryLoader;
+    private FXMLLoader currentLorryLoader;
+    private CurrentLorryController currentLorryController;
 
     private LorriesList lorries;
 
@@ -43,7 +47,6 @@ public class MainController implements Initializable {
         bundle = resources;
         lorries = new LorriesList();
 
-
         tblClmCarID.setCellValueFactory(new PropertyValueFactory<>("idNumber"));
         tblClmDriversPhone.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
         tblClmBroker.setCellValueFactory(new PropertyValueFactory<>("broker"));
@@ -51,7 +54,6 @@ public class MainController implements Initializable {
 
         initListeners();
         initLoader();
-
     }
 
     private void initListeners() {
@@ -65,15 +67,18 @@ public class MainController implements Initializable {
     }
 
     private void initLoader() {
-        addNewLorryloader = new FXMLLoader(getClass().getResource("../fxml/addNewLorry.fxml"));
-        addNewLorryloader.setResources(bundle);
+        addNewLorryLoader = new FXMLLoader(getClass().getResource("../fxml/addNewLorry.fxml"));
+        currentLorryLoader = new FXMLLoader(getClass().getResource("../fxml/currentLorry.fxml"));
+        addNewLorryLoader.setResources(bundle);
+        currentLorryLoader.setResources(bundle);
 
         try {
-            editWindow = addNewLorryloader.load();
+            addNewLorryWindow = addNewLorryLoader.load();
+            currentLorryWindow = currentLorryLoader.load();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        AddNewLorryController addNewLorryController = addNewLorryloader.getController();
+        AddNewLorryController addNewLorryController = addNewLorryLoader.getController();
         addNewLorryController.setLorries(lorries);
         addNewLorryController.setMainController(this);
     }
@@ -81,16 +86,15 @@ public class MainController implements Initializable {
     public void createNote() {
         if (addNewLorryStage == null) {
             addNewLorryStage = new Stage();
-            addNewLorryStage.setTitle(bundle.getString("addNewNotice"));
+            addNewLorryStage.setTitle(bundle.getString("title.addNewNotice"));
             addNewLorryStage.setResizable(false);
-            addNewLorryStage.setScene(new Scene(editWindow));
+            addNewLorryStage.setScene(new Scene(addNewLorryWindow));
             addNewLorryStage.initModality(Modality.WINDOW_MODAL);
             addNewLorryStage.initOwner(mainStage);
 
-            AddNewLorryController addNewLorryController = addNewLorryloader.getController();
+            AddNewLorryController addNewLorryController = addNewLorryLoader.getController();
             addNewLorryController.setCurrentStage(addNewLorryStage);
         }
-
         addNewLorryStage.show();
     }
 
@@ -102,20 +106,18 @@ public class MainController implements Initializable {
         if (selectedLorry == null) return;
         if (currentLorryStage == null) {
             currentLorryStage = new Stage();
-            currentLorryStage.setTitle(bundle.getString("addNewNotice"));
+            currentLorryStage.setTitle(bundle.getString("title.aboutLorry"));
             currentLorryStage.setResizable(false);
-            currentLorryStage.setScene(new Scene(editWindow));
+            currentLorryStage.setScene(new Scene(currentLorryWindow));
             currentLorryStage.initModality(Modality.WINDOW_MODAL);
             currentLorryStage.initOwner(mainStage);
 
-//            AddNewLorryController addNewLorryController = addNewLorryloader.getController();
-//            addNewLorryController.setCurrentStage(addNewLorryStage);
+            currentLorryController = currentLorryLoader.getController();
+            currentLorryController.setCurrentStage(currentLorryStage);
+            currentLorryController.setLorries(lorries);
         }
-
+        currentLorryController.setCurrentLorry(selectedLorry);
         currentLorryStage.show();
-//        System.out.println("!!!!!!!!!!!!"); //todo delete
-//        editDialogController.setPerson(selectedLorry); todo написать метод
-//        showDialog();
     }
 
     public void setMainStage(Stage mainStage) {
