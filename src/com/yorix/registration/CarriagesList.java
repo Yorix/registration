@@ -11,7 +11,7 @@ public class CarriagesList implements Externalizable {
     public CarriagesList() {
     }
 
-    public CarriagesList(Lorry lorry) {
+    public CarriagesList(Object o) {
         carriages = FXCollections.observableArrayList();
     }
 

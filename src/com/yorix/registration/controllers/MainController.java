@@ -1,9 +1,9 @@
 package com.yorix.registration.controllers;
 
 import com.yorix.registration.Broker;
+import com.yorix.registration.CarriagesList;
 import com.yorix.registration.LorriesList;
 import com.yorix.registration.Lorry;
-import com.yorix.registration.io.InOut;
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -11,6 +11,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -19,9 +20,13 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 public class MainController implements Initializable {
+    @FXML
+    private Button btnShow1Broker, btnShow2Broker, btnShowAll;
     @FXML
     private TableView<Lorry> tblLorries;
     @FXML
@@ -122,5 +127,22 @@ public class MainController implements Initializable {
 
     public void setMainStage(Stage mainStage) {
         this.mainStage = mainStage;
+    }
+
+    public void showCarriages(ActionEvent actionEvent) {
+        CarriagesList carriagesList = new CarriagesList(null);
+        if (actionEvent.getSource() == btnShow1Broker) {
+            lorries.getLorries().stream()
+                    .map(Lorry::getCarriages)
+                    .map(CarriagesList::getCarriages)
+                    .forEach(System.out::println); //todo
+            for (Lorry l : lorries.getLorries()) {
+
+            }
+        } else if (actionEvent.getSource() == btnShow2Broker) {
+
+        } else if (actionEvent.getSource() == btnShowAll) {
+
+        }
     }
 }

@@ -13,12 +13,21 @@
         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
     </padding>
     <HBox spacing="10.0">
-        <TextField promptText="%lbl.search" />
-        <Button mnemonicParsing="false" text="%btn.search" />
-    </HBox>
-    <HBox spacing="10.0">
-        <Button mnemonicParsing="false" onAction="#createNote" text="%btn.addNote" />
-      <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#openNote" text="%btn.editNote" />
+        <VBox spacing="10.0">
+            <HBox spacing="10.0">
+                <TextField promptText="%lbl.search" />
+                <Button mnemonicParsing="false" text="%btn.search" />
+            </HBox>
+            <HBox spacing="10.0">
+                <Button mnemonicParsing="false" onAction="#createNote" text="%btn.addNote" />
+                <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#openNote" text="%btn.editNote" />
+            </HBox>
+        </VBox>
+        <VBox spacing="10.0">
+            <Button fx:id="btnShow1Broker" mnemonicParsing="false" onAction="#showCarriages" prefWidth="200.0" text="%btn.show1Broker" />
+            <Button fx:id="btnShow2Broker" mnemonicParsing="false" onAction="#showCarriages" prefWidth="200.0" text="%btn.show2Broker" />
+         <Button fx:id="btnShowAll" layoutX="10.0" layoutY="45.0" mnemonicParsing="false" onAction="#showCarriages" prefWidth="200.0" text="%btn.showAll" />
+        </VBox>
     </HBox>
     <TableView fx:id="tblLorries">
         <columns>
