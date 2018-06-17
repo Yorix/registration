@@ -2,30 +2,50 @@ package com.yorix.registration;
 
 import javafx.beans.property.SimpleStringProperty;
 
-import java.io.*;
-import java.util.GregorianCalendar;
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalField;
 
 public class Carriage implements Externalizable {
 
-    private FormattedDate date;
+    private SimpleStringProperty date;
+    private Car car;
     private SimpleStringProperty consignee;
     private Broker broker;
 
     public Carriage() {
     }
 
-    public Carriage(FormattedDate date, String consignee, Broker broker) {
-        this.date = date;
-        this.broker = broker;
+    public Carriage(LocalDateTime date, Car car, String consignee, Broker broker) {
+        this.date = new SimpleStringProperty(date.format(DateTimeFormatter.ofPattern("DD.MM.YYYY hh.mm")));
+        this.car = car;
         this.consignee = new SimpleStringProperty(consignee);
+        this.broker = broker;
     }
 
-    public FormattedDate getDate() {
+    public LocalDate getDate() {
+        return LocalDate.parse(date.get());
+    }
+
+    public SimpleStringProperty dateProperty() {
         return date;
     }
 
-    public void setDate(FormattedDate date) {
-        this.date = date;
+    public void setDate(LocalDate date) {
+        this.date.set(date.format(DateTimeFormatter.ofPattern("DD.MM.YYYY hh.mm")));
+    }
+
+    public Car getCar() {
+        return car;
+    }
+
+    public void setCar(Car car) {
+        this.car = car;
     }
 
     public String getConsignee() {
@@ -59,14 +79,16 @@ public class Carriage implements Externalizable {
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
-        out.writeObject(date.getDate());
-        out.writeObject(consignee.getValue());
+        out.writeObject(date.get());
+        out.writeObject(car);
+        out.writeObject(consignee.get());
         out.writeObject(broker);
     }
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        date = new FormattedDate((GregorianCalendar) in.readObject());
+        date = new SimpleStringProperty(in.readObject().toString());
+        car = (Car) in.readObject();
         consignee = new SimpleStringProperty(in.readObject().toString());
         broker = (Broker) in.readObject();
     }

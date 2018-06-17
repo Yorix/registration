@@ -1,8 +1,9 @@
 package com.yorix.registration.controllers;
 
 import com.yorix.registration.Broker;
-import com.yorix.registration.LorriesList;
-import com.yorix.registration.Lorry;
+import com.yorix.registration.Car;
+import com.yorix.registration.Carriage;
+import com.yorix.registration.CarriagesList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -12,9 +13,10 @@ import javafx.scene.control.ToggleGroup;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 
-public class AddNewLorryController implements Initializable {
+public class AddNewCarriageController implements Initializable {
     @FXML
     private TextField carId, phoneNum, consignee;
     @FXML
@@ -25,7 +27,7 @@ public class AddNewLorryController implements Initializable {
 
     private Broker broker;
     private Stage currentStage;
-    private LorriesList lorries;
+    private CarriagesList carriagesList;
 
 
     @Override
@@ -36,7 +38,7 @@ public class AddNewLorryController implements Initializable {
         rdbExim.setToggleGroup(brokers);
     }
 
-    public void addNewLorry(ActionEvent actionEvent) {
+    public void addNewCarriage(ActionEvent actionEvent) {
         if (rdbPolitrans.isSelected()) broker = Broker.POLITRANS;
         else if (rdbExim.isSelected()) broker = Broker.EXIM;
         else return; //todo добавить требование выбора фирмы
@@ -44,16 +46,16 @@ public class AddNewLorryController implements Initializable {
 
         if (phoneNum.getText().length() < 10) return; //todo добавить сообщение о неверном номере телефона
         if (carId.getText().isEmpty()) return; //todo добавить требование ввода номера машины
-        for (Lorry lorry : lorries.getLorries()) {
-            if (lorry.getIdNumber().equals(carId.getText())) {
-                mainController.openNote(lorry);
+        for (Carriage carriage : carriagesList.getCarriages()) {
+            if (carriage.getCar().getCarNumber().equals(carId.getText())) {
+                mainController.editCarriage(carriage);
                 clearFields();
                 currentStage.hide();
                 return;
             }
         }
 
-        lorries.add(new Lorry(carId.getText(), phoneNum.getText(), consignee.getText(), broker));
+        carriagesList.add(new Carriage(LocalDateTime.now(), new Car(carId.getText(), phoneNum.getText()), consignee.getText(), broker));
 
         clearFields();
         currentStage.hide();
@@ -75,7 +77,7 @@ public class AddNewLorryController implements Initializable {
         this.currentStage = currentStage;
     }
 
-    public void setLorries(LorriesList lorries) {
-        this.lorries = lorries;
+    public void setCarriages(CarriagesList carriagesList) {
+        this.carriagesList = carriagesList;
     }
 }

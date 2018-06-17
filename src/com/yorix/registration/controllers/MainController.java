@@ -1,9 +1,12 @@
 package com.yorix.registration.controllers;
 
 import com.yorix.registration.Broker;
+import com.yorix.registration.Car;
+import com.yorix.registration.Carriage;
 import com.yorix.registration.CarriagesList;
-import com.yorix.registration.LorriesList;
-import com.yorix.registration.Lorry;
+import com.yorix.registration.io.InOut;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -20,75 +23,78 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
 public class MainController implements Initializable {
     @FXML
     private Button btnShow1Broker, btnShow2Broker, btnShowAll;
     @FXML
-    private TableView<Lorry> tblLorries;
+    private TableView<Carriage> tblCarriages;
     @FXML
-    private TableColumn<Lorry, String> tblClmCarID, tblClmDriversPhone;
+    private TableColumn<Carriage, String> tblClmDate;
     @FXML
-    private TableColumn<Lorry, Broker> tblClmBroker;
+    private TableColumn<Carriage, String> tblClmCarNumber;
+    @FXML
+    private TableColumn<Carriage, String> tblClmPhoneNumber;
+    @FXML
+    private TableColumn<Carriage, Broker> tblClmBroker;
 
     private ResourceBundle bundle;
     private Stage mainStage;
     private Stage addNewLorryStage;
-    private Stage currentLorryStage;
+    private Stage editCarriageStage;
     private Parent addNewLorryWindow;
     private Parent currentLorryWindow;
-    private FXMLLoader addNewLorryLoader;
-    private FXMLLoader currentLorryLoader;
-    private CurrentLorryController currentLorryController;
+    private FXMLLoader addNewCarriageLoader;
+    private FXMLLoader editCarriageLoader;
+    private EditCarriageController editCarriageController;
 
-    private LorriesList lorries;
+    private CarriagesList carriagesList;
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         bundle = resources;
-        lorries = new LorriesList();
+        carriagesList = InOut.read();
 
-        tblClmCarID.setCellValueFactory(new PropertyValueFactory<>("idNumber"));
-        tblClmDriversPhone.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
+        tblClmDate.setCellValueFactory(new PropertyValueFactory<>("date"));
+        tblClmCarNumber.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getCar().getCarNumber()));
+        tblClmPhoneNumber.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getCar().getPhoneNumber()));
         tblClmBroker.setCellValueFactory(new PropertyValueFactory<>("broker"));
-        tblLorries.setItems(lorries.getLorries());
+        tblCarriages.setItems(carriagesList.getCarriages());
 
         initListeners();
-        initLoader();
+        initLoaders();
     }
 
     private void initListeners() {
-        lorries.getLorries().addListener((ListChangeListener<Lorry>) c -> {
+        carriagesList.getCarriages().addListener((ListChangeListener<Carriage>) c -> {
 //                updateCountLabel(); todo create method
         });
 
-        tblLorries.setOnMouseClicked(event -> {
-            if (event.getClickCount() == 2) openNote(tblLorries.getSelectionModel().getSelectedItem());
+        tblCarriages.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) editCarriage(tblCarriages.getSelectionModel().getSelectedItem());
         });
     }
 
-    private void initLoader() {
-        addNewLorryLoader = new FXMLLoader(getClass().getResource("../fxml/addNewLorry.fxml"));
-        currentLorryLoader = new FXMLLoader(getClass().getResource("../fxml/currentLorry.fxml"));
-        addNewLorryLoader.setResources(bundle);
-        currentLorryLoader.setResources(bundle);
+    private void initLoaders() {
+        addNewCarriageLoader = new FXMLLoader(getClass().getResource("../fxml/addNewCarriage.fxml"));
+        editCarriageLoader = new FXMLLoader(getClass().getResource("../fxml/editCarriage.fxml"));
+        addNewCarriageLoader.setResources(bundle);
+        editCarriageLoader.setResources(bundle);
 
         try {
-            addNewLorryWindow = addNewLorryLoader.load();
-            currentLorryWindow = currentLorryLoader.load();
+            addNewLorryWindow = addNewCarriageLoader.load();
+            currentLorryWindow = editCarriageLoader.load();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        AddNewLorryController addNewLorryController = addNewLorryLoader.getController();
-        addNewLorryController.setLorries(lorries);
-        addNewLorryController.setMainController(this);
+        AddNewCarriageController addNewCarriageController = addNewCarriageLoader.getController();
+        addNewCarriageController.setCarriages(carriagesList);
+        addNewCarriageController.setMainController(this);
     }
 
-    public void createNote() {
+    public void createCarriage() {
         if (addNewLorryStage == null) {
             addNewLorryStage = new Stage();
             addNewLorryStage.setTitle(bundle.getString("title.addNewNotice"));
@@ -97,52 +103,53 @@ public class MainController implements Initializable {
             addNewLorryStage.initModality(Modality.WINDOW_MODAL);
             addNewLorryStage.initOwner(mainStage);
 
-            AddNewLorryController addNewLorryController = addNewLorryLoader.getController();
-            addNewLorryController.setCurrentStage(addNewLorryStage);
+            AddNewCarriageController addNewCarriageController = addNewCarriageLoader.getController();
+            addNewCarriageController.setCurrentStage(addNewLorryStage);
         }
         addNewLorryStage.show();
     }
 
-    public void openNote(ActionEvent actionEvent) {
-        openNote(tblLorries.getSelectionModel().getSelectedItem());
+    public void editCarriage(ActionEvent actionEvent) {
+        editCarriage(tblCarriages.getSelectionModel().getSelectedItem());
     }
 
-    public void openNote(Lorry selectedLorry) {
-        if (selectedLorry == null) return;
-        if (currentLorryStage == null) {
-            currentLorryStage = new Stage();
-            currentLorryStage.setTitle(bundle.getString("title.aboutLorry"));
-            currentLorryStage.setResizable(false);
-            currentLorryStage.setScene(new Scene(currentLorryWindow));
-            currentLorryStage.initModality(Modality.WINDOW_MODAL);
-            currentLorryStage.initOwner(mainStage);
+    public void editCarriage(Carriage selectedCarriage) {
+        if (selectedCarriage == null) return;
+        if (editCarriageStage == null) {
+            editCarriageStage = new Stage();
+            editCarriageStage.setTitle(bundle.getString("title.aboutLorry"));
+            editCarriageStage.setResizable(false);
+            editCarriageStage.setScene(new Scene(currentLorryWindow));
+            editCarriageStage.initModality(Modality.WINDOW_MODAL);
+            editCarriageStage.initOwner(mainStage);
 
-            currentLorryController = currentLorryLoader.getController();
-            currentLorryController.setCurrentStage(currentLorryStage);
-            currentLorryController.setLorries(lorries);
+            editCarriageController = editCarriageLoader.getController();
+            editCarriageController.setCurrentStage(editCarriageStage);
+            editCarriageController.setCarriagesList(carriagesList);
         }
-        currentLorryController.setCurrentLorry(selectedLorry);
-        currentLorryStage.show();
+        editCarriageController.setCurrentCarriage(selectedCarriage);
+        editCarriageStage.show();
     }
 
     public void setMainStage(Stage mainStage) {
         this.mainStage = mainStage;
     }
 
+
     public void showCarriages(ActionEvent actionEvent) {
-        CarriagesList carriagesList = new CarriagesList(null);
-        if (actionEvent.getSource() == btnShow1Broker) {
-            lorries.getLorries().stream()
-                    .map(Lorry::getCarriages)
-                    .map(CarriagesList::getCarriages)
-                    .forEach(System.out::println); //todo
-            for (Lorry l : lorries.getLorries()) {
-
-            }
-        } else if (actionEvent.getSource() == btnShow2Broker) {
-
-        } else if (actionEvent.getSource() == btnShowAll) {
-
-        }
+//        CarriagesList carriagesList = new CarriagesList();
+//        if (actionEvent.getSource() == btnShow1Broker) {
+//            this.carriagesList.getCarriages().stream()
+//                    .map(CarriagesList::getCarriages)
+//                    .map(CarriagesList::getCarriages)
+//                    .forEach(System.out::println); //todo
+//            for (Carriage c : this.carriagesList.getCarriages()) {
+//
+//            }
+//        } else if (actionEvent.getSource() == btnShow2Broker) {
+//
+//        } else if (actionEvent.getSource() == btnShowAll) {
+//
+//        }
     }
 }

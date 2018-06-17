@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox spacing="10.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.yorix.registration.controllers.EditCarriageController">
+    <padding>
+        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+    </padding>
+    <AnchorPane>
+        <HBox spacing="5.0" AnchorPane.leftAnchor="0.0">
+            <Label text="%lbl.carId"/>
+            <TextField fx:id="txtCarId" editable="false"/>
+            <Label fx:id="lblCarID" layoutX="10.0" layoutY="10.0"/>
+        </HBox>
+    </AnchorPane>
+    <AnchorPane>
+        <HBox spacing="10.0" AnchorPane.leftAnchor="0.0">
+            <Label text="%lbl.phoneNum"/>
+            <TextField fx:id="txtPhoneNum" editable="false"/>
+            <Button mnemonicParsing="false" text="%key.edit"/>
+        </HBox>
+    </AnchorPane>
+    <AnchorPane layoutX="20.0" layoutY="90.0">
+        <TableView fx:id="tblCarriages" prefHeight="250.0">
+            <columns>
+                <TableColumn fx:id="tblClmDate" maxWidth="150.0" minWidth="120.0" prefWidth="120.0"
+                             text="%tbl.clm.date"/>
+                <TableColumn fx:id="tblClmConsignee" minWidth="150.0" prefWidth="220.0" text="%tbl.clm.consignee"/>
+                <TableColumn fx:id="tblClmBroker" maxWidth="100.0" minWidth="80.0" text="%tbl.clm.broker"/>
+            </columns>
+            <columnResizePolicy>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+            </columnResizePolicy>
+        </TableView>
+    </AnchorPane>
+    <AnchorPane>
+        <HBox alignment="CENTER_LEFT" spacing="10.0">
+            <Label text="%lbl.consignee"/>
+            <TextField fx:id="txtConsignee"/>
+            <VBox layoutX="6.0" spacing="5.0">
+                <RadioButton fx:id="rdbPolitrans" mnemonicParsing="false" text="%lbl.politrans"/>
+                <RadioButton fx:id="rdbExim" mnemonicParsing="false" text="%lbl.exim"/>
+            </VBox>
+            <Button mnemonicParsing="false" onAction="#addNewCarriage" text="%btn.add"/>
+        </HBox>
+    </AnchorPane>
+</VBox>

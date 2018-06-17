@@ -1,19 +1,23 @@
 package com.yorix.registration.controllers;
 
-import com.yorix.registration.*;
+import com.yorix.registration.Broker;
+import com.yorix.registration.Car;
+import com.yorix.registration.Carriage;
+import com.yorix.registration.CarriagesList;
 import com.yorix.registration.io.InOut;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 
-public class CurrentLorryController implements Initializable {
-
+public class EditCarriageController implements Initializable {
+    @FXML
+    private Label lblCarID;
     @FXML
     private RadioButton rdbPolitrans, rdbExim;
     @FXML
@@ -24,11 +28,10 @@ public class CurrentLorryController implements Initializable {
     private TextField txtCarId, txtPhoneNum, txtConsignee;
 
     private Stage currentStage;
-    private MainController mainController;
     private ResourceBundle bundle;
 
-    private Lorry currentLorry;
-    private LorriesList lorries;
+    private Carriage currentCarriage;
+    private CarriagesList carriagesList;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -39,13 +42,15 @@ public class CurrentLorryController implements Initializable {
     }
 
     public void addNewCarriage(ActionEvent actionEvent) {
-        FormattedDate date = new FormattedDate();
+        LocalDateTime date = LocalDateTime.now();
+        Car car = new Car("0000", "1234567890"); //todo реализовать добавление машины
         String consignee = txtConsignee.getText();
         if (!rdbPolitrans.isSelected() && !rdbExim.isSelected()) return; //todo предупреждение о выборе брокера
         Broker broker = rdbPolitrans.isSelected() ? Broker.POLITRANS : Broker.EXIM;
-        currentLorry.getCarriages().add(currentLorry, new Carriage(date, consignee, broker));
 
-        InOut.write(lorries);
+        carriagesList.add(new Carriage(date, car, consignee, broker));
+
+        InOut.write(carriagesList);
         clearFields();
         currentStage.hide();
     }
@@ -56,30 +61,26 @@ public class CurrentLorryController implements Initializable {
         rdbExim.setSelected(false);
     }
 
-    public void setMainController(MainController mainController) {
-        this.mainController = mainController;
-    }
-
     public void setCurrentStage(Stage currentStage) {
         this.currentStage = currentStage;
     }
 
-    public void setCurrentLorry(Lorry currentLorry) {
-        this.currentLorry = currentLorry;
-        fillFields();
+    public void setCurrentCarriage(Carriage currentCarriage) {
+        this.currentCarriage = currentCarriage;
+//        fillFields(); todo раскомментировать
     }
 
-    public void setLorries(LorriesList lorries) {
-        this.lorries = lorries;
+    public void setCarriagesList(CarriagesList carriagesList) {
+        this.carriagesList = carriagesList;
     }
 
-    private void fillFields() {
-        txtCarId.setText(currentLorry.getIdNumber());
-        txtPhoneNum.setText(currentLorry.getPhoneNumber());
-
-        tblClmDate.setCellValueFactory(new PropertyValueFactory<>("date"));
-        tblClmConsignee.setCellValueFactory(new PropertyValueFactory<>("consignee"));
-        tblClmBroker.setCellValueFactory(new PropertyValueFactory<>("broker"));
-        tblCarriages.setItems(currentLorry.getCarriages().getCarriages());
-    }
+//    private void fillFields() { todo исправить
+//        txtCarId.setText(currentCarriage.getCarNumber());
+//        txtPhoneNum.setText(currentCarriage.getPhoneNumber());
+//
+//        tblClmDate.setCellValueFactory(new PropertyValueFactory<>("date"));
+//        tblClmConsignee.setCellValueFactory(new PropertyValueFactory<>("consignee"));
+//        tblClmBroker.setCellValueFactory(new PropertyValueFactory<>("broker"));
+//        tblCarriages.setItems(currentCarriage.getCarriages().getCarriages());
+//    }
 }
