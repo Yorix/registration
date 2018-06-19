@@ -6,6 +6,7 @@ import javafx.collections.ObservableList;
 
 import java.io.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class CarriagesList implements Externalizable {
     private ObservableList<Carriage> carriages;
@@ -14,9 +15,11 @@ public class CarriagesList implements Externalizable {
     public CarriagesList() {
     }
 
-    public CarriagesList(Object o) {
-        carriages = FXCollections.observableArrayList();
-        optional = FXCollections.observableArrayList();
+    public CarriagesList(boolean createEmptyList) {
+        if (createEmptyList) {
+            carriages = FXCollections.observableArrayList();
+            optional = FXCollections.observableArrayList();
+        }
     }
 
     public void add(Carriage carriage) {
@@ -24,8 +27,8 @@ public class CarriagesList implements Externalizable {
         InOut.write(this);
     }
 
-    public void delete(Carriage carriage) {
-        carriages.remove(carriage);
+    public void delete(int index) {
+        carriages.remove(index);
         InOut.write(this);
     }
 
@@ -37,7 +40,7 @@ public class CarriagesList implements Externalizable {
         return carriages;
     }
 
-    public ObservableList<Carriage> getCarriages(LocalDate from, LocalDate to) {
+    public ObservableList<Carriage> getCarriages(LocalDateTime from, LocalDateTime to) {
         optional.clear();
         carriages.stream()
                 .filter(carriage -> carriage.getDate().getDayOfYear() >= from.getDayOfYear()

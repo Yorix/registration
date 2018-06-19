@@ -19,7 +19,9 @@ public class Main extends Application {
         loader.setResources(ResourceBundle.getBundle("com.yorix.registration.bundles.Locale", new Locale("ru")));
         Parent root = loader.load();
         primaryStage.setTitle(loader.getResources().getString("title.main"));
-        primaryStage.setScene(new Scene(root, 400, 300));
+        primaryStage.setScene(new Scene(root, 800, 400));
+        primaryStage.setMinWidth(400);
+        primaryStage.setMinHeight(200);
         MainController mainController = loader.getController();
         mainController.setMainStage(primaryStage);
         primaryStage.show();

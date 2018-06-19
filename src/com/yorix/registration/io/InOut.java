@@ -11,7 +11,7 @@ public class InOut {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("resources/carriagesList.dat"))) {
             carriages = (CarriagesList) ois.readObject();
         } catch (ClassNotFoundException | IOException e) {
-            carriages = new CarriagesList(null);
+            carriages = new CarriagesList(true);
             write(carriages);
         }
         return carriages;

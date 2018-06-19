@@ -50,13 +50,13 @@ public class Car implements Externalizable {
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
-        out.writeChars(carNumber.getValue());
-        out.writeChars(phoneNumber.getValue());
+        out.writeObject(carNumber.getValue());
+        out.writeObject(phoneNumber.getValue());
     }
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        carNumber = new SimpleStringProperty(in.readLine());
-        phoneNumber = new SimpleStringProperty(in.readLine());
+        carNumber = new SimpleStringProperty(in.readObject().toString());
+        phoneNumber = new SimpleStringProperty(in.readObject().toString());
     }
 }
