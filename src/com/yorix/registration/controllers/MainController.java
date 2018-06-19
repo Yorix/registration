@@ -10,10 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -25,6 +22,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
+    @FXML
+    private Label lblCount;
     @FXML
     private DatePicker dtpFrom, dtpTo;
     @FXML
@@ -53,7 +52,7 @@ public class MainController implements Initializable {
         bundle = resources;
         carriagesList = InOut.read();
 
-        from = LocalDate.of(2018, 1, 1);
+        from = LocalDate.of(2000, 1, 1);
         to = LocalDate.now();
 
         tblClmDate.setCellValueFactory(new PropertyValueFactory<>("date"));
@@ -140,12 +139,18 @@ public class MainController implements Initializable {
 
         if (actionEvent.getSource() == btnShowBroker1) {
             tblCarriages.setItems(carriagesList.getCarriages(from, to, Broker.POLITRANS));
+            carriagesList.setCurrentBrocker(Broker.POLITRANS);
 
         } else if (actionEvent.getSource() == btnShowBroker2) {
             tblCarriages.setItems(carriagesList.getCarriages(from, to, Broker.EXIM));
+            carriagesList.setCurrentBrocker(Broker.EXIM);
 
         } else if (actionEvent.getSource() == btnShowAll) {
             tblCarriages.setItems(carriagesList.getCarriages(from, to, null));
+            carriagesList.setCurrentBrocker(null);
         }
+
+
+        lblCount.setText("" + carriagesList.getSize());
     }
 }

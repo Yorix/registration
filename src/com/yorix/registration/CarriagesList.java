@@ -10,12 +10,12 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class CarriagesList implements Externalizable {
     private ObservableList<Carriage> carriages;
     private ObservableList<Carriage> optional;
-    private int eximCount;
-    private int politransCount;
+    private Broker currentBrocker;
 
 
     public CarriagesList() {
@@ -30,14 +30,40 @@ public class CarriagesList implements Externalizable {
 
     public void add(Carriage carriage) {
         carriages.add(carriage);
+        if (carriage.getBroker() == currentBrocker || currentBrocker == null) optional.add(carriage);
+
 //        carriages.add(new Carriage(
-//                LocalDateTime.parse("01.05.2018 12:35", DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")),
-//                "gg5566hh",
-//                "+333333333",
-//                "fffffffffff",
+//                LocalDateTime.parse("20.11.2017 12:35", DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")),
+//                "GG5566HH",
+//                "0",
+//                "srf",
+//                Broker.POLITRANS,
+//                "000"
+//        ));
+//        carriages.add(new Carriage(
+//                LocalDateTime.parse("25.05.2018 12:35", DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")),
+//                "GG5566HH",
+//                "0",
+//                "srf",
 //                Broker.EXIM,
-//                "00"
-//                ));
+//                "000"
+//        ));
+//        carriages.add(new Carriage(
+//                LocalDateTime.parse("01.06.2018 12:35", DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")),
+//                "GG5566HH",
+//                "0",
+//                "srf",
+//                Broker.POLITRANS,
+//                "000"
+//        ));
+//        carriages.add(new Carriage(
+//                LocalDateTime.parse("10.06.2018 12:35", DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")),
+//                "GG5566HH",
+//                "0",
+//                "srf",
+//                Broker.EXIM,
+//                "000"
+//        ));
     }
 
     public void delete(int index) {
@@ -45,12 +71,18 @@ public class CarriagesList implements Externalizable {
         InOut.write(this);
     }
 
+    public void setCurrentBrocker(Broker currentBrocker) {
+        this.currentBrocker = currentBrocker;
+    }
+
     public void setCarriages(ObservableList<Carriage> carriages) {
         this.carriages = carriages;
     }
 
     public ObservableList<Carriage> getCarriages(LocalDate from, LocalDate to, Broker broker) {
-        if ((from == null || to == null) && broker == null) return carriages;
+
+//        if ((from == null || to == null) && broker == null) return carriages;
+        if (optional == null) optional = FXCollections.observableArrayList();
         optional.clear();
         carriages.stream()
                 .filter(carriage -> carriage.getBroker() == broker || broker == null)
@@ -58,6 +90,10 @@ public class CarriagesList implements Externalizable {
                         && carriage.getDate().minusDays(1).toLocalDate().isBefore(to)))
                 .forEach(optional::add);
         return optional;
+    }
+
+    public int getSize() {
+        return optional.size();
     }
 
     @Override
@@ -73,12 +109,10 @@ public class CarriagesList implements Externalizable {
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
         out.writeObject(carriages.toArray(new Carriage[0]));
-        out.writeObject(optional.toArray(new Carriage[0]));
     }
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
         carriages = FXCollections.observableArrayList((Carriage[]) in.readObject());
-        optional = FXCollections.observableArrayList((Carriage[]) in.readObject());
     }
 }
