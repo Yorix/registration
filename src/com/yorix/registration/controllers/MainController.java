@@ -1,14 +1,9 @@
 package com.yorix.registration.controllers;
 
 import com.yorix.registration.Broker;
-import com.yorix.registration.Car;
 import com.yorix.registration.Carriage;
 import com.yorix.registration.CarriagesList;
 import com.yorix.registration.io.InOut;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -16,18 +11,22 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
+    @FXML
+    private DatePicker dtpFrom, dtpTo;
     @FXML
     private Button btnShowBroker1, btnShowBroker2, btnShowAll;
     @FXML
@@ -45,6 +44,8 @@ public class MainController implements Initializable {
     private EditDialogController editDialogController;
 
     private CarriagesList carriagesList;
+    private LocalDate from;
+    private LocalDate to;
 
 
     @Override
@@ -52,22 +53,35 @@ public class MainController implements Initializable {
         bundle = resources;
         carriagesList = InOut.read();
 
+        from = LocalDate.of(2018, 1, 1);
+        to = LocalDate.now();
+
         tblClmDate.setCellValueFactory(new PropertyValueFactory<>("date"));
         tblClmCarNumber.setCellValueFactory(new PropertyValueFactory<>("carNumber"));
         tblClmPhoneNumber.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
         tblClmConsignee.setCellValueFactory(new PropertyValueFactory<>("consignee"));
         tblClmBroker.setCellValueFactory(new PropertyValueFactory<>("broker"));
         tblClmDeclarationId.setCellValueFactory(new PropertyValueFactory<>("declarationId"));
-        tblCarriages.setItems(carriagesList.getCarriages());
+        tblCarriages.setItems(carriagesList.getCarriages(null, null, null));
 
         initListeners();
         initLoaders();
     }
 
     private void initListeners() {
-        carriagesList.getCarriages().addListener((ListChangeListener<Carriage>) c -> {
-//                updateCountLabel(); todo create method
-        });
+        dtpFrom.getEditor().textProperty().addListener(
+                (observable, oldVal, newVal) ->
+                        from = LocalDate.parse(newVal, DateTimeFormatter.ofPattern("dd.MM.yyyy"))
+        );
+
+        dtpTo.getEditor().textProperty().addListener(
+                (observable, oldVal, newVal) ->
+                        to = LocalDate.parse(newVal, DateTimeFormatter.ofPattern("dd.MM.yyyy"))
+        );
+
+//        carriagesList.getCarriages().addListener((ListChangeListener<Carriage>) c -> {
+////                updateCountLabel(); todo create method
+//        });
 
         tblCarriages.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) editCarriage(tblCarriages.getSelectionModel().getSelectedItem());
@@ -92,6 +106,10 @@ public class MainController implements Initializable {
         editDialogController.setCurrentCarriage(null);
 
         showEditDialog(bundle.getString("title.addNewNote"));
+    }
+
+    public void editCarriage(ActionEvent actionEvent) {
+        editCarriage(tblCarriages.getSelectionModel().getSelectedItem());
     }
 
     public void editCarriage(Carriage carriage) {
@@ -121,13 +139,13 @@ public class MainController implements Initializable {
     public void showCarriages(ActionEvent actionEvent) {
 
         if (actionEvent.getSource() == btnShowBroker1) {
-            tblCarriages.setItems(carriagesList.getCarriages(Broker.POLITRANS));
+            tblCarriages.setItems(carriagesList.getCarriages(from, to, Broker.POLITRANS));
 
         } else if (actionEvent.getSource() == btnShowBroker2) {
-            tblCarriages.setItems(carriagesList.getCarriages(Broker.EXIM));
+            tblCarriages.setItems(carriagesList.getCarriages(from, to, Broker.EXIM));
 
         } else if (actionEvent.getSource() == btnShowAll) {
-            tblCarriages.setItems(carriagesList.getCarriages());
+            tblCarriages.setItems(carriagesList.getCarriages(from, to, null));
         }
     }
 }

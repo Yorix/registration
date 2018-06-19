@@ -1,9 +1,9 @@
 package com.yorix.registration.controllers;
 
 import com.yorix.registration.Broker;
-import com.yorix.registration.Car;
 import com.yorix.registration.Carriage;
 import com.yorix.registration.CarriagesList;
+import com.yorix.registration.io.InOut;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -53,8 +53,6 @@ public class EditDialogController implements Initializable {
             currentCarriage.setBroker(broker);
             currentCarriage.setDeclarationId(decId.getText());
 
-            carriagesList.add(null);
-            carriagesList.delete(carriagesList.getCarriages().size() - 1);
         } else {
             carriagesList.add(
                     new Carriage(
@@ -68,6 +66,7 @@ public class EditDialogController implements Initializable {
             );
         }
 
+        InOut.write(carriagesList);
         clearFields();
         currentStage.hide();
     }

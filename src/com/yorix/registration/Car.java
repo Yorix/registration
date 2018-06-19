@@ -2,7 +2,10 @@ package com.yorix.registration;
 
 import javafx.beans.property.SimpleStringProperty;
 
-import java.io.*;
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 
 public class Car implements Externalizable {
     private SimpleStringProperty carNumber;

@@ -1,16 +1,13 @@
 package com.yorix.registration;
 
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.TemporalField;
 
 public class Carriage implements Externalizable {
 
@@ -25,16 +22,16 @@ public class Carriage implements Externalizable {
     }
 
     public Carriage(LocalDateTime date, String carNumber, String phoneNumber, String consignee, Broker broker, String declarationId) {
-        this.date = new SimpleStringProperty(date.format(DateTimeFormatter.ofPattern("dd.MM.YYYY HH.mm")));
+        this.date = new SimpleStringProperty(date.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")));
         this.carNumber = new SimpleStringProperty(carNumber);
         this.phoneNumber = new SimpleStringProperty(phoneNumber);
         this.consignee = new SimpleStringProperty(consignee);
-        this.broker =  new SimpleStringProperty(broker.toString());
+        this.broker = new SimpleStringProperty(broker.toString());
         this.declarationId = new SimpleStringProperty(declarationId);
     }
 
     public LocalDateTime getDate() {
-        return LocalDateTime.parse(date.get(), DateTimeFormatter.ofPattern("dd.MM.YYYY HH.mm"));
+        return LocalDateTime.parse(date.get(), DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
     }
 
     public SimpleStringProperty dateProperty() {
@@ -42,7 +39,7 @@ public class Carriage implements Externalizable {
     }
 
     public void setDate(LocalDateTime date) {
-        this.date.set(date.format(DateTimeFormatter.ofPattern("dd.MM.YYYY HH.mm")));
+        this.date.set(date.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")));
     }
 
     public String getCarNumber() {
