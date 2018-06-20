@@ -1,6 +1,5 @@
 package com.yorix.registration;
 
-import com.yorix.registration.io.InOut;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -9,8 +8,6 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 public class CarriagesList implements Externalizable {
     private ObservableList<Carriage> carriages;
@@ -31,57 +28,25 @@ public class CarriagesList implements Externalizable {
     public void add(Carriage carriage) {
         carriages.add(carriage);
         if (carriage.getBroker() == currentBrocker || currentBrocker == null) optional.add(carriage);
-
-//        carriages.add(new Carriage(
-//                LocalDateTime.parse("20.11.2017 12:35", DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")),
-//                "GG5566HH",
-//                "0",
-//                "srf",
-//                Broker.POLITRANS,
-//                "000"
-//        ));
-//        carriages.add(new Carriage(
-//                LocalDateTime.parse("25.05.2018 12:35", DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")),
-//                "GG5566HH",
-//                "0",
-//                "srf",
-//                Broker.EXIM,
-//                "000"
-//        ));
-//        carriages.add(new Carriage(
-//                LocalDateTime.parse("01.06.2018 12:35", DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")),
-//                "GG5566HH",
-//                "0",
-//                "srf",
-//                Broker.POLITRANS,
-//                "000"
-//        ));
-//        carriages.add(new Carriage(
-//                LocalDateTime.parse("10.06.2018 12:35", DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")),
-//                "GG5566HH",
-//                "0",
-//                "srf",
-//                Broker.EXIM,
-//                "000"
-//        ));
     }
 
     public void delete(int index) {
         carriages.remove(index);
-        InOut.write(this);
     }
 
     public void setCurrentBrocker(Broker currentBrocker) {
         this.currentBrocker = currentBrocker;
     }
 
-    public void setCarriages(ObservableList<Carriage> carriages) {
-        this.carriages = carriages;
+    public Broker getCurrentBrocker() {
+        return currentBrocker;
     }
 
-    public ObservableList<Carriage> getCarriages(LocalDate from, LocalDate to, Broker broker) {
+    public ObservableList<Carriage> getCarriages() {
+        return carriages;
+    }
 
-//        if ((from == null || to == null) && broker == null) return carriages;
+    public ObservableList<Carriage> getOptionalList(LocalDate from, LocalDate to, Broker broker) {
         if (optional == null) optional = FXCollections.observableArrayList();
         optional.clear();
         carriages.stream()

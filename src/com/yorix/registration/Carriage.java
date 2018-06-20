@@ -17,17 +17,25 @@ public class Carriage implements Externalizable {
     private SimpleStringProperty consignee;
     private SimpleStringProperty broker;
     private SimpleStringProperty declarationId;
+    private String additionalInformation;
 
     public Carriage() {
     }
 
-    public Carriage(LocalDateTime date, String carNumber, String phoneNumber, String consignee, Broker broker, String declarationId) {
+    public Carriage(LocalDateTime date,
+                    String carNumber,
+                    String phoneNumber,
+                    String consignee,
+                    Broker broker,
+                    String declarationId,
+                    String additionalInformation) {
         this.date = new SimpleStringProperty(date.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")));
         this.carNumber = new SimpleStringProperty(carNumber);
         this.phoneNumber = new SimpleStringProperty(phoneNumber);
         this.consignee = new SimpleStringProperty(consignee);
         this.broker = new SimpleStringProperty(broker.toString());
         this.declarationId = new SimpleStringProperty(declarationId);
+        this.additionalInformation = additionalInformation;
     }
 
     public LocalDateTime getDate() {
@@ -102,6 +110,14 @@ public class Carriage implements Externalizable {
         this.declarationId.set(declarationId);
     }
 
+    public String getAdditionalInformation() {
+        return additionalInformation;
+    }
+
+    public void setAdditionalInformation(String additionalInformation) {
+        this.additionalInformation = additionalInformation;
+    }
+
     @Override
     public String toString() {
         return "Carriage{" +
@@ -119,6 +135,7 @@ public class Carriage implements Externalizable {
         out.writeObject(consignee.get());
         out.writeObject(broker.get());
         out.writeObject(declarationId.get());
+        out.writeObject(additionalInformation);
     }
 
     @Override
@@ -129,5 +146,6 @@ public class Carriage implements Externalizable {
         consignee = new SimpleStringProperty(in.readObject().toString());
         broker = new SimpleStringProperty(in.readObject().toString());
         declarationId = new SimpleStringProperty(in.readObject().toString());
+        additionalInformation = in.readObject().toString();
     }
 }

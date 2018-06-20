@@ -20,7 +20,7 @@ public class Main extends Application {
         Parent root = loader.load();
         primaryStage.setTitle(loader.getResources().getString("title.main"));
         primaryStage.setScene(new Scene(root, 800, 400));
-        primaryStage.setMinWidth(400);
+        primaryStage.setMinWidth(600);
         primaryStage.setMinHeight(200);
         MainController mainController = loader.getController();
         mainController.setMainStage(primaryStage);
