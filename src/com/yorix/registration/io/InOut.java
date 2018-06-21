@@ -11,7 +11,7 @@ public class InOut {
 
     public static CarriagesList read() {
         CarriagesList carriages;
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("../carriagesList.dat"))) {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("C:/ProgramData/carriagesList.dat"))) {
             carriages = (CarriagesList) ois.readObject();
         } catch (ClassNotFoundException | IOException e) {
             carriages = new CarriagesList(true);
@@ -21,7 +21,7 @@ public class InOut {
     }
 
     public static void write(CarriagesList carriages) {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("../carriagesList.dat"))) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("C:/ProgramData/carriagesList.dat"))) {
             oos.writeObject(carriages);
         } catch (IOException e) {
             e.printStackTrace();
