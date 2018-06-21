@@ -92,7 +92,7 @@ public class MainController implements Initializable {
     }
 
     private void initLoaders() {
-        editDialogLoader = new FXMLLoader(getClass().getResource("../fxml/editDialog.fxml"));
+        editDialogLoader = new FXMLLoader(getClass().getResource("/fxml/editDialog.fxml"));
         editDialogLoader.setResources(bundle);
 
         try {

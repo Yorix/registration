@@ -11,7 +11,7 @@ public class InOut {
 
     public static CarriagesList read() {
         CarriagesList carriages;
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("resources/carriagesList.dat"))) {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("../carriagesList.dat"))) {
             carriages = (CarriagesList) ois.readObject();
         } catch (ClassNotFoundException | IOException e) {
             carriages = new CarriagesList(true);
@@ -21,7 +21,7 @@ public class InOut {
     }
 
     public static void write(CarriagesList carriages) {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("resources/carriagesList.dat"))) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("../carriagesList.dat"))) {
             oos.writeObject(carriages);
         } catch (IOException e) {
             e.printStackTrace();
@@ -51,11 +51,15 @@ public class InOut {
         });
         builder.append("Всего: ;").append(carriages.size());
 
-        try (FileWriter fileWriter = new FileWriter("C:/Users/ВипБизнесКучурган/Desktop/report.csv");
-             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
-            bufferedWriter.write(builder.toString());
+        try (OutputStream os = new FileOutputStream("C:/Users/ВипБизнесКучурган/Desktop/REPORT.csv")) {
+            os.write(builder.toString().getBytes("Cp1251"));
         } catch (IOException e) {
-            e.printStackTrace();
+            try (OutputStream os = new FileOutputStream("E:/REPORT.csv")) {
+                os.write(builder.toString().getBytes("Cp1251"));
+            } catch (IOException e1) {
+                e.printStackTrace();
+                e1.printStackTrace();
+            }
         }
     }
 }

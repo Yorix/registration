@@ -14,9 +14,8 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("fxml/main.fxml"));
-        loader.setResources(ResourceBundle.getBundle("com.yorix.registration.bundles.Locale", new Locale("ru")));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));
+        loader.setResources(ResourceBundle.getBundle("bundles/Locale", new Locale("ru")));
         Parent root = loader.load();
         primaryStage.setTitle(loader.getResources().getString("title.main"));
         primaryStage.setScene(new Scene(root, 800, 400));
