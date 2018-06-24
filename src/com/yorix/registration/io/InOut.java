@@ -8,10 +8,13 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class InOut {
+    private static String dataPath = ConfigReader.read()[0];
+    private static String reportOutPath = ConfigReader.read()[1];
+    private static String reportOutPathAlt = ConfigReader.read()[2];
 
     public static CarriagesList read() {
         CarriagesList carriages;
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("C:/ProgramData/carriagesList.dat"))) {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(dataPath))) {
             carriages = (CarriagesList) ois.readObject();
         } catch (ClassNotFoundException | IOException e) {
             carriages = new CarriagesList(true);
@@ -21,7 +24,7 @@ public class InOut {
     }
 
     public static void write(CarriagesList carriages) {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("C:/ProgramData/carriagesList.dat"))) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(dataPath))) {
             oos.writeObject(carriages);
         } catch (IOException e) {
             e.printStackTrace();
@@ -51,10 +54,10 @@ public class InOut {
         });
         builder.append("Всего: ;").append(carriages.size());
 
-        try (OutputStream os = new FileOutputStream("C:/Users/ВипБизнесКучурган/Desktop/REPORT.csv")) {
+        try (OutputStream os = new FileOutputStream(reportOutPath)) {
             os.write(builder.toString().getBytes("Cp1251"));
         } catch (IOException e) {
-            try (OutputStream os = new FileOutputStream("E:/REPORT.csv")) {
+            try (OutputStream os = new FileOutputStream(reportOutPathAlt)) {
                 os.write(builder.toString().getBytes("Cp1251"));
             } catch (IOException e1) {
                 e.printStackTrace();

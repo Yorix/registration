@@ -116,7 +116,7 @@ public class EditDialogController implements Initializable {
         dialog.show();
     }
 
-    private void clearFields() {
+    public void clearFields() {
         carId.clear();
         phoneNum.setText("+380");
         consignee.clear();
@@ -127,14 +127,7 @@ public class EditDialogController implements Initializable {
         currentCarriage = null;
     }
 
-    public void setCurrentCarriage(Carriage currentCarriage) {
-        this.currentCarriage = currentCarriage;
-        if (currentCarriage != null)
-            fillFields();
-        else clearFields();
-    }
-
-    private void fillFields() {
+    public void fillFields() {
         carId.setText(currentCarriage.getCarNumber());
         phoneNum.setText(currentCarriage.getPhoneNumber());
         consignee.setText(currentCarriage.getConsignee());
@@ -142,6 +135,11 @@ public class EditDialogController implements Initializable {
         rdbPolitrans.setSelected(currentCarriage.getBroker().equals(Broker.POLITRANS));
         rdbExim.setSelected(currentCarriage.getBroker().equals(Broker.EXIM));
         txtAdditionalInformation.setText(currentCarriage.getAdditionalInformation());
+    }
+
+    public void setCurrentCarriage(Carriage currentCarriage) {
+        this.currentCarriage = currentCarriage;
+        fillFields();
     }
 
     public void setMainController(MainController mainController) {

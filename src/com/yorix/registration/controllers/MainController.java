@@ -106,8 +106,7 @@ public class MainController implements Initializable {
     }
 
     public void addCarriage(ActionEvent actionEvent) {
-        editDialogController.setCurrentCarriage(null);
-
+        editDialogController.clearFields();
         showEditDialog(bundle.getString("title.addNewNote"));
     }
 
@@ -116,6 +115,7 @@ public class MainController implements Initializable {
     }
 
     public void editCarriage(Carriage carriage) {
+        editDialogController.clearFields();
         editDialogController.setCurrentCarriage(carriage);
         showEditDialog(bundle.getString("title.editNote"));
     }
