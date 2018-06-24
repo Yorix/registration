@@ -9,16 +9,21 @@ import java.util.List;
 
 public class InOut {
     private static String dataPath = ConfigReader.read()[0];
-    private static String reportOutPath = ConfigReader.read()[1];
-    private static String reportOutPathAlt = ConfigReader.read()[2];
+    private static String dataAltPath = ConfigReader.read()[1];
+    private static String reportOutPath = ConfigReader.read()[2];
+    private static String reportOutPathAlt = ConfigReader.read()[3];
 
     public static CarriagesList read() {
         CarriagesList carriages;
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(dataPath))) {
             carriages = (CarriagesList) ois.readObject();
         } catch (ClassNotFoundException | IOException e) {
-            carriages = new CarriagesList(true);
-            write(carriages);
+            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(dataAltPath))) {
+                carriages = (CarriagesList) ois.readObject();
+            } catch (IOException | ClassNotFoundException e1) {
+                carriages = new CarriagesList(true);
+                write(carriages);
+            }
         }
         return carriages;
     }
@@ -26,7 +31,27 @@ public class InOut {
     public static void write(CarriagesList carriages) {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(dataPath))) {
             oos.writeObject(carriages);
+            createCopy(carriages);
         } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void createCopy(CarriagesList carriages) {
+        try (ObjectInputStream oisCopy = new ObjectInputStream(new FileInputStream(dataAltPath))) {
+            CarriagesList carriagesCopy = (CarriagesList) oisCopy.readObject();
+            if (carriages.getCarriages().size() >= carriagesCopy.getCarriages().size()) {
+                ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(dataAltPath));
+                oos.writeObject(carriages);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(dataAltPath))) {
+                oos.writeObject(carriages);
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }

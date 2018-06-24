@@ -12,9 +12,10 @@ import java.io.IOException;
 public class ConfigReader {
 
     public static String[] read() {
-        String[] pathes = new String[3];
+        String[] pathes = new String[4];
         DefaultHandler handler = new DefaultHandler() {
             boolean dataPath;
+            boolean dataAltPath;
             boolean reportOutPath;
             boolean reportOutAltPath;
 
@@ -22,6 +23,8 @@ public class ConfigReader {
             public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
                 if (qName.equals("dataPath"))
                     dataPath = true;
+                if (qName.equals("dataAltPath"))
+                    dataAltPath = true;
                 if (qName.equals("reportOutPath"))
                     reportOutPath = true;
                 if (qName.equals("reportOutAltPath"))
@@ -34,13 +37,17 @@ public class ConfigReader {
                     dataPath = false;
                     pathes[0] = new String(ch, start, length);
                 }
+                if (dataAltPath) {
+                    dataAltPath = false;
+                    pathes[1] = new String(ch, start, length);
+                }
                 if (reportOutPath) {
                     reportOutPath = false;
-                    pathes[1] = new String(ch, start, length);
+                    pathes[2] = new String(ch, start, length);
                 }
                 if (reportOutAltPath) {
                     reportOutAltPath = false;
-                    pathes[2] = new String(ch, start, length);
+                    pathes[3] = new String(ch, start, length);
                 }
             }
         };
