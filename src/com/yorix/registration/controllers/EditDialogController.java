@@ -47,8 +47,33 @@ public class EditDialogController implements Initializable {
                             "\\+380\\s\\d{2}\\s\\d{3}\\s?|" +
                             "\\+380\\s\\d{2}\\s\\d{3}\\s\\d|" +
                             "\\+380\\s\\d{2}\\s\\d{3}\\s\\d{2}\\s?|" +
-                            "\\+380\\s\\d{2}\\s\\d{3}\\s\\d{2}\\s\\d{1,2}"))
+                            "\\+380\\s\\d{2}\\s\\d{3}\\s\\d{2}\\s\\d{1,2}|" +
+                            "\\+380\\d{9,10}"))
                 phoneNum.setText(oldValue);
+
+            if (newValue.matches("\\+380\\d{9}")) {
+                phoneNum.setText(newValue.substring(0, 4) + " " +
+                        newValue.substring(4, 6) + " " +
+                        newValue.substring(6, 9) + " " +
+                        newValue.substring(9, 11) + " " +
+                        newValue.substring(11, 13));
+            }
+
+            if (newValue.matches("\\+3800\\d{9}")) {
+                phoneNum.setText(newValue.substring(0, 4) + " " +
+                        newValue.substring(5, 7) + " " +
+                        newValue.substring(7, 10) + " " +
+                        newValue.substring(10, 12) + " " +
+                        newValue.substring(12, 14));
+            }
+
+            if (newValue.matches("\\+380\\+380\\d{9}")) {
+                phoneNum.setText(newValue.substring(4, 8) + " " +
+                        newValue.substring(8, 10) + " " +
+                        newValue.substring(10, 13) + " " +
+                        newValue.substring(13, 15) + " " +
+                        newValue.substring(15, 17));
+            }
 
             if (newValue.startsWith(oldValue)
                     && newValue.matches(".*\\d")
@@ -58,6 +83,7 @@ public class EditDialogController implements Initializable {
                     || oldValue.length() == 14))
                 phoneNum.setText(newValue.replace(oldValue, oldValue + " "));
         });
+
     }
 
     public void execute(ActionEvent actionEvent) {
