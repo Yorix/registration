@@ -18,7 +18,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.StringConverter;
 
 import java.io.IOException;
 import java.net.URL;
@@ -61,6 +60,8 @@ public class MainController implements Initializable {
 
         to = LocalDate.now();
         from = LocalDate.of(to.getYear(), to.getMonthValue(), 1);
+        dtpFrom.setValue(from);
+        dtpTo.setValue(to);
 
         tblClmDate.setCellValueFactory(new PropertyValueFactory<>("date"));
         tblClmCarNumber.setCellValueFactory(new PropertyValueFactory<>("carNumber"));
@@ -69,9 +70,8 @@ public class MainController implements Initializable {
         tblClmBroker.setCellValueFactory(new PropertyValueFactory<>("broker"));
         tblClmDeclarationId.setCellValueFactory(new PropertyValueFactory<>("declarationId"));
         tblCarriages.setItems(carriagesList.getOptionalList(from, to, null));
+        tblCarriages.scrollTo(carriagesList.getSize());
 
-        dtpFrom.setValue(from);
-        dtpTo.setValue(to);
         initListeners();
         initLoaders();
     }
@@ -158,6 +158,7 @@ public class MainController implements Initializable {
         }
 
         lblCount.setText("" + carriagesList.getSize());
+        tblCarriages.scrollTo(carriagesList.getSize());
     }
 
     public void showCreateReportWindow(ActionEvent actionEvent) {
