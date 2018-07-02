@@ -18,6 +18,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 
 import java.io.IOException;
 import java.net.URL;
@@ -58,8 +59,8 @@ public class MainController implements Initializable {
         bundle = resources;
         carriagesList = InOut.read();
 
-        from = LocalDate.of(2000, 1, 1);
         to = LocalDate.now();
+        from = LocalDate.of(to.getYear(), to.getMonthValue(), 1);
 
         tblClmDate.setCellValueFactory(new PropertyValueFactory<>("date"));
         tblClmCarNumber.setCellValueFactory(new PropertyValueFactory<>("carNumber"));
@@ -67,8 +68,10 @@ public class MainController implements Initializable {
         tblClmConsignee.setCellValueFactory(new PropertyValueFactory<>("consignee"));
         tblClmBroker.setCellValueFactory(new PropertyValueFactory<>("broker"));
         tblClmDeclarationId.setCellValueFactory(new PropertyValueFactory<>("declarationId"));
-        tblCarriages.setItems(carriagesList.getOptionalList(null, null, null));
+        tblCarriages.setItems(carriagesList.getOptionalList(from, to, null));
 
+        dtpFrom.setValue(from);
+        dtpTo.setValue(to);
         initListeners();
         initLoaders();
     }

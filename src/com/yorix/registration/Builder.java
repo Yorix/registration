@@ -13,17 +13,7 @@ public class Builder {
 
     private void fillList() {
         list.add(new Carriage(
-                LocalDateTime.parse("21.06.2018 13:31", DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")),
-                "",
-                "",
-                "",
-                Broker.POLITRANS,
-                "",
-                ""
-        ));
-
-        list.add(new Carriage(
-                LocalDateTime.parse("21.06.2018 17:44", DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")),
+                LocalDateTime.parse("01.01.2000 00:00", DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")),
                 "",
                 "",
                 "",
@@ -31,6 +21,5 @@ public class Builder {
                 "",
                 ""
         ));
-
     }
 }
