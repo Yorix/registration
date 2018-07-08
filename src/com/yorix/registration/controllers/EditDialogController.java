@@ -11,10 +11,16 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
 public class EditDialogController implements Initializable {
+    @FXML
+    private TextField txtTime;
+    @FXML
+    private DatePicker currentDate;
     @FXML
     private TextArea txtAdditionalInformation;
     @FXML
@@ -84,6 +90,20 @@ public class EditDialogController implements Initializable {
                 phoneNum.setText(newValue.replace(oldValue, oldValue + " "));
         });
 
+        txtTime.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches(
+                    "|" +
+                            "^[0-2]|" +
+                            "^[0,1][0-9]|" +
+                            "^2[0-3]|" +
+                            "^(([0,1][0-9])|(2[0-3])):|" +
+                            "^(([0,1][0-9])|(2[0-3])):[0-5]|" +
+                            "^(([0,1][0-9])|(2[0-3])):[0-5][0-9]$"))
+                txtTime.setText(oldValue);
+
+            if (newValue.matches("^(([0,1][0-9])|(2[0-3]))") && newValue.length() > oldValue.length())
+                txtTime.setText(newValue + ":");
+        });
     }
 
     public void execute(ActionEvent actionEvent) {
@@ -108,6 +128,12 @@ public class EditDialogController implements Initializable {
             return;
         }
 
+        if (txtTime.getText().length() < 5) {
+            showPopup(bundle.getString("report.incorrectTime"));
+            return;
+        }
+
+        String dateTime = currentDate.getValue().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")) + " " + txtTime.getText();
         if (currentCarriage != null) {
             currentCarriage.setCarNumber(carId.getText());
             currentCarriage.setPhoneNumber(phoneNum.getText().length() > 5 ? phoneNum.getText() : "");
@@ -115,11 +141,12 @@ public class EditDialogController implements Initializable {
             currentCarriage.setBroker(broker);
             currentCarriage.setDeclarationId(decId.getText());
             currentCarriage.setAdditionalInformation(txtAdditionalInformation.getText());
+            currentCarriage.setDate(LocalDateTime.parse(dateTime, DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")));
 
         } else {
             carriagesList.add(
                     new Carriage(
-                            LocalDateTime.now(),
+                            LocalDateTime.parse(dateTime, DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")),
                             carId.getText(),
                             phoneNum.getText(),
                             consignee.getText(),
@@ -150,6 +177,9 @@ public class EditDialogController implements Initializable {
         rdbPolitrans.setSelected(false);
         rdbExim.setSelected(false);
         txtAdditionalInformation.clear();
+        String time = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm"));
+        currentDate.setValue(LocalDate.now());
+        txtTime.setText(time);
         currentCarriage = null;
     }
 
@@ -161,6 +191,9 @@ public class EditDialogController implements Initializable {
         rdbPolitrans.setSelected(currentCarriage.getBroker().equals(Broker.POLITRANS));
         rdbExim.setSelected(currentCarriage.getBroker().equals(Broker.EXIM));
         txtAdditionalInformation.setText(currentCarriage.getAdditionalInformation());
+        currentDate.setValue(currentCarriage.getDate().toLocalDate());
+        String time = currentCarriage.getDate().format(DateTimeFormatter.ofPattern("HH:mm"));
+        txtTime.setText(time);
     }
 
     public void setCurrentCarriage(Carriage currentCarriage) {
