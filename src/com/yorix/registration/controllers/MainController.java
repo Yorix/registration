@@ -71,6 +71,7 @@ public class MainController implements Initializable {
         tblClmDeclarationId.setCellValueFactory(new PropertyValueFactory<>("declarationId"));
         tblCarriages.setItems(carriagesList.getOptionalList(from, to, null));
         tblCarriages.scrollTo(carriagesList.getSize());
+        lblCount.setText(Integer.toString(carriagesList.getSize()));
 
         initListeners();
         initLoaders();
@@ -157,8 +158,8 @@ public class MainController implements Initializable {
             carriagesList.setCurrentBrocker(null);
         }
 
-        lblCount.setText("" + carriagesList.getSize());
         tblCarriages.scrollTo(carriagesList.getSize());
+        lblCount.setText(Integer.toString(carriagesList.getSize()));
     }
 
     public void showCreateReportWindow(ActionEvent actionEvent) {
