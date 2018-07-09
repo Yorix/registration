@@ -149,7 +149,7 @@ public class EditDialogController implements Initializable {
         });
     }
 
-    public void execute(ActionEvent actionEvent) {
+    public void execute() {
         if (carId.getText().isEmpty()) {
             showPopup(bundle.getString("report.carNumberError"));
             return;
@@ -216,7 +216,7 @@ public class EditDialogController implements Initializable {
         dialog.show();
     }
 
-    public void clearFields() {
+    void clearFields() {
         carId.clear();
         countryCode.getSelectionModel().selectFirst();
         phoneNum.clear();
@@ -231,7 +231,7 @@ public class EditDialogController implements Initializable {
         currentCarriage = null;
     }
 
-    public void fillFields() {
+    private void fillFields() {
         carId.setText(currentCarriage.getCarNumber());
         countryCode.getSelectionModel().select(
                 currentCarriage.getPhoneNumber().isEmpty()
@@ -251,21 +251,16 @@ public class EditDialogController implements Initializable {
         txtTime.setText(time);
     }
 
-    public void setCurrentCarriage(Carriage currentCarriage) {
+    void setCurrentCarriage(Carriage currentCarriage) {
         this.currentCarriage = currentCarriage;
         fillFields();
     }
 
-    public void setMainController(MainController mainController) {
-        MainController mainController1 = mainController;
-    }
-
-    public void setCurrentStage(Stage currentStage) {
+    void setCurrentStage(Stage currentStage) {
         this.currentStage = currentStage;
     }
 
-    public void setCarriages(CarriagesList carriagesList) {
+    void setCarriages(CarriagesList carriagesList) {
         this.carriagesList = carriagesList;
     }
-
 }

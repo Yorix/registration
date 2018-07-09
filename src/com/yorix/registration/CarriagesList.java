@@ -10,6 +10,7 @@ import java.io.ObjectOutput;
 import java.time.LocalDate;
 
 public class CarriagesList implements Externalizable {
+    private static final long serialVersionUID = -8180360097410716153L;
     private ObservableList<Carriage> carriages;
     private ObservableList<Carriage> optional;
     private Broker currentBrocker;
@@ -30,8 +31,9 @@ public class CarriagesList implements Externalizable {
         if (carriage.getBroker() == currentBrocker || currentBrocker == null) optional.add(carriage);
     }
 
-    public void delete(int index) {
-        carriages.remove(index);
+    public void delete(Carriage carriage) {
+        carriages.remove(carriage);
+        optional.remove(carriage);
     }
 
     public void setCurrentBrocker(Broker currentBrocker) {

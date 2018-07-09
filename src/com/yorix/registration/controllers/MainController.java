@@ -24,6 +24,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
@@ -106,25 +107,38 @@ public class MainController implements Initializable {
         }
         editDialogController = editDialogLoader.getController();
         editDialogController.setCarriages(carriagesList);
-        editDialogController.setMainController(this);
     }
 
-    public void addCarriage(ActionEvent actionEvent) {
+    public void addCarriage() {
         editDialogController.clearFields();
         showEditDialog(bundle.getString("title.addNewNote"));
     }
 
-    public void editCarriage(ActionEvent actionEvent) {
+    public void editCarriage() {
         editCarriage(tblCarriages.getSelectionModel().getSelectedItem());
     }
 
-    public void editCarriage(Carriage carriage) {
+    private void editCarriage(Carriage carriage) {
         editDialogController.clearFields();
         editDialogController.setCurrentCarriage(carriage);
         showEditDialog(bundle.getString("title.editNote"));
     }
 
-    public void showEditDialog(String title) {
+    public void deleteCarriage() {
+        Carriage current = tblCarriages.getSelectionModel().getSelectedItem();
+        if (current == null) return;
+        Alert dialog = new Alert(Alert.AlertType.CONFIRMATION);
+        dialog.setTitle(bundle.getString("btn.deleteNote") + "?");
+        dialog.setHeaderText(bundle.getString("btn.deleteNote") + "?");
+        dialog.setContentText(current.getCarNumber());
+
+        Optional<ButtonType> option = dialog.showAndWait();
+
+        if (option.get() == ButtonType.OK)
+            carriagesList.delete(current);
+    }
+
+    private void showEditDialog(String title) {
         if (editDialogStage == null) {
             editDialogStage = new Stage();
             editDialogStage.setResizable(false);
@@ -136,7 +150,7 @@ public class MainController implements Initializable {
             editDialogController.setCurrentStage(editDialogStage);
         }
         editDialogStage.setTitle(title);
-        editDialogStage.show();
+        editDialogStage.showAndWait();
     }
 
     public void setMainStage(Stage mainStage) {
@@ -162,7 +176,7 @@ public class MainController implements Initializable {
         lblCount.setText(Integer.toString(carriagesList.getSize()));
     }
 
-    public void showCreateReportWindow(ActionEvent actionEvent) {
+    public void showCreateReportWindow() {
         if (createReportStage == null) {
             CheckBox carNumber = new CheckBox(bundle.getString("lbl.carNum"));
             CheckBox phoneNumber = new CheckBox(bundle.getString("lbl.phoneNum"));

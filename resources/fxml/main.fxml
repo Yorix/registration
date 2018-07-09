@@ -1,71 +1,69 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.DatePicker?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
-
-<VBox spacing="10.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.yorix.registration.controllers.MainController">
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox spacing="10.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.yorix.registration.controllers.MainController">
     <padding>
-        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
     </padding>
     <AnchorPane>
         <HBox layoutY="35.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
-            <Button mnemonicParsing="false" onAction="#addCarriage" prefWidth="100.0" text="%btn.addNote" />
-            <Button mnemonicParsing="false" onAction="#editCarriage" prefWidth="100.0" text="%btn.editNote" />
+            <Button mnemonicParsing="false" onAction="#addCarriage" prefWidth="80.0" text="%btn.addNote"/>
+            <Button mnemonicParsing="false" onAction="#editCarriage" prefWidth="80.0" text="%btn.editNote"/>
+            <Button mnemonicParsing="false" onAction="#deleteCarriage" prefWidth="80.0" text="%btn.deleteNote"/>
         </HBox>
         <HBox layoutX="459.0" spacing="10.0" AnchorPane.rightAnchor="150.0" AnchorPane.topAnchor="0.0">
-            <Label text="%lbl.period" />
+            <Label text="%lbl.period"/>
             <VBox spacing="10.0">
                 <AnchorPane>
                     <HBox spacing="5.0" AnchorPane.rightAnchor="0.0">
-                        <Label text="%lbl.from" />
-                        <DatePicker fx:id="dtpFrom" editable="false" prefWidth="100.0" />
+                        <Label text="%lbl.from"/>
+                        <DatePicker fx:id="dtpFrom" editable="false" prefWidth="100.0"/>
                     </HBox>
                 </AnchorPane>
                 <AnchorPane>
                     <HBox spacing="5.0" AnchorPane.rightAnchor="0.0">
-                        <Label text="%lbl.to" />
-                        <DatePicker fx:id="dtpTo" editable="false" prefWidth="100.0" />
+                        <Label text="%lbl.to"/>
+                        <DatePicker fx:id="dtpTo" editable="false" prefWidth="100.0"/>
                     </HBox>
                 </AnchorPane>
             </VBox>
         </HBox>
         <VBox layoutY="70.0" spacing="10.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <HBox spacing="5.0">
-                <Button fx:id="btnShowBroker1" mnemonicParsing="false" onAction="#showCarriages" prefWidth="120.0" text="%btn.showBroker1" />
+                <Button fx:id="btnShowBroker1" mnemonicParsing="false" onAction="#showCarriages" prefWidth="120.0"
+                        text="%btn.showBroker1"/>
             </HBox>
             <HBox spacing="5.0">
-                <Button fx:id="btnShowBroker2" mnemonicParsing="false" onAction="#showCarriages" prefWidth="120.0" text="%btn.showBroker2" />
+                <Button fx:id="btnShowBroker2" mnemonicParsing="false" onAction="#showCarriages" prefWidth="120.0"
+                        text="%btn.showBroker2"/>
             </HBox>
             <HBox spacing="5.0">
-                <Button fx:id="btnShowAll" mnemonicParsing="false" onAction="#showCarriages" prefWidth="120.0" text="%btn.showAll" />
+                <Button fx:id="btnShowAll" mnemonicParsing="false" onAction="#showCarriages" prefWidth="120.0"
+                        text="%btn.showAll"/>
             </HBox>
         </VBox>
-        <Button layoutX="3.0" layoutY="13.0" mnemonicParsing="false" onAction="#showCreateReportWindow" prefWidth="200.0" text="%btn.createReport" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
-      <HBox layoutX="406.0" layoutY="78.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="150.0">
-         <children>
-            <Label text="%lbl.count" />
-            <Label fx:id="lblCount" />
-         </children>
-      </HBox>
+        <Button layoutX="3.0" layoutY="13.0" mnemonicParsing="false" onAction="#showCreateReportWindow"
+                prefWidth="200.0" text="%btn.createReport" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0"/>
+        <HBox layoutX="406.0" layoutY="78.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="150.0">
+            <Label text="%lbl.count"/>
+            <Label fx:id="lblCount"/>
+        </HBox>
     </AnchorPane>
     <TableView fx:id="tblCarriages" VBox.vgrow="ALWAYS">
         <columns>
-            <TableColumn fx:id="tblClmDate" minWidth="110.0" prefWidth="110.0" text="%tbl.clm.date" />
-            <TableColumn fx:id="tblClmCarNumber" minWidth="100.0" prefWidth="100.0" text="%lbl.carNum" />
-            <TableColumn fx:id="tblClmPhoneNumber" minWidth="150.0" prefWidth="150.0" text="%lbl.phoneNum" />
-            <TableColumn fx:id="tblClmConsignee" minWidth="200.0" prefWidth="200.0" text="%tbl.clm.consignee" />
-            <TableColumn fx:id="tblClmBroker" maxWidth="100.0" minWidth="80.0" prefWidth="100.0" text="%tbl.clm.broker" />
-            <TableColumn fx:id="tblClmDeclarationId" minWidth="100.0" prefWidth="100.0" text="%lbl.decId" />
+            <TableColumn fx:id="tblClmDate" minWidth="110.0" prefWidth="110.0" text="%tbl.clm.date"/>
+            <TableColumn fx:id="tblClmCarNumber" minWidth="100.0" prefWidth="100.0" text="%lbl.carNum"/>
+            <TableColumn fx:id="tblClmPhoneNumber" minWidth="150.0" prefWidth="150.0" text="%lbl.phoneNum"/>
+            <TableColumn fx:id="tblClmConsignee" minWidth="200.0" prefWidth="200.0" text="%tbl.clm.consignee"/>
+            <TableColumn fx:id="tblClmBroker" maxWidth="100.0" minWidth="80.0" prefWidth="100.0"
+                         text="%tbl.clm.broker"/>
+            <TableColumn fx:id="tblClmDeclarationId" minWidth="100.0" prefWidth="100.0" text="%lbl.decId"/>
         </columns>
         <columnResizePolicy>
-            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
         </columnResizePolicy>
     </TableView>
 </VBox>
