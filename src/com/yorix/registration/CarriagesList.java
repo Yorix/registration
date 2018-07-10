@@ -8,7 +8,7 @@ import java.time.LocalDate;
 public class CarriagesList {
     private ObservableList<Carriage> carriages;
     private ObservableList<Carriage> optional;
-    private Broker currentBrocker;
+    private Broker currentBroker;
 
     public CarriagesList() {
         carriages = FXCollections.observableArrayList();
@@ -17,7 +17,7 @@ public class CarriagesList {
 
     public void add(Carriage carriage) {
         carriages.add(carriage);
-        if (carriage.getBroker() == currentBrocker || currentBrocker == null) optional.add(carriage);
+        if (carriage.getBroker() == currentBroker || currentBroker == null) optional.add(carriage);
     }
 
     public void delete(Carriage carriage) {
@@ -25,12 +25,12 @@ public class CarriagesList {
         optional.remove(carriage);
     }
 
-    public void setCurrentBrocker(Broker currentBrocker) {
-        this.currentBrocker = currentBrocker;
+    public void setCurrentBroker(Broker currentBroker) {
+        this.currentBroker = currentBroker;
     }
 
-    public Broker getCurrentBrocker() {
-        return currentBrocker;
+    public Broker getCurrentBroker() {
+        return currentBroker;
     }
 
     public ObservableList<Carriage> getCarriages() {
@@ -52,13 +52,13 @@ public class CarriagesList {
         return optional.size();
     }
 
-    @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
-        for (Carriage carriage : carriages) {
-            builder.append(carriage).append("\n");
-        }
-        builder.deleteCharAt(builder.length() - 1);
-        return builder.toString();
-    }
+//    @Override
+//    public String toString() {
+//        StringBuilder builder = new StringBuilder();
+//        for (Carriage carriage : carriages) {
+//            builder.append(carriage).append("\n");
+//        }
+//        builder.deleteCharAt(builder.length() - 1);
+//        return builder.toString();
+//    }
 }

@@ -30,6 +30,7 @@ public class EditDialogController implements Initializable {
     @FXML
     private RadioButton rdbPolitrans, rdbExim;
 
+    private InOut inOut;
     private Carriage currentCarriage;
     private CarriagesList carriagesList;
 
@@ -39,6 +40,7 @@ public class EditDialogController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         bundle = resources;
+        inOut = new InOut();
         countryCode.setItems(FXCollections.observableArrayList("+380", "+373"));
         countryCode.getSelectionModel().selectFirst();
         ToggleGroup brokers = new ToggleGroup();
@@ -203,7 +205,8 @@ public class EditDialogController implements Initializable {
             );
         }
 
-        InOut.write(carriagesList);
+
+        inOut.write(carriagesList);
         clearFields();
         currentStage.hide();
     }

@@ -41,6 +41,7 @@ public class MainController implements Initializable {
     @FXML
     private TableColumn<Carriage, Broker> tblClmBroker;
 
+    private InOut inOut;
     private ResourceBundle bundle;
     private Stage mainStage;
     private Stage editDialogStage;
@@ -57,7 +58,8 @@ public class MainController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         bundle = resources;
-        carriagesList = InOut.read();
+        inOut = new InOut();
+        carriagesList = inOut.read();
 
         to = LocalDate.now();
         from = LocalDate.of(to.getYear(), to.getMonthValue(), 1);
@@ -89,7 +91,7 @@ public class MainController implements Initializable {
                         to = LocalDate.parse(newVal, DateTimeFormatter.ofPattern("dd.MM.yyyy"))
         );
 
-        carriagesList.getCarriages().addListener((ListChangeListener<Carriage>) c -> InOut.write(carriagesList));
+        carriagesList.getCarriages().addListener((ListChangeListener<Carriage>) c -> inOut.write(carriagesList));
 
         tblCarriages.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) editCarriage(tblCarriages.getSelectionModel().getSelectedItem());
@@ -161,15 +163,15 @@ public class MainController implements Initializable {
 
         if (actionEvent.getSource() == btnShowBroker1) {
             tblCarriages.setItems(carriagesList.getOptionalList(from, to, Broker.POLITRANS));
-            carriagesList.setCurrentBrocker(Broker.POLITRANS);
+            carriagesList.setCurrentBroker(Broker.POLITRANS);
 
         } else if (actionEvent.getSource() == btnShowBroker2) {
             tblCarriages.setItems(carriagesList.getOptionalList(from, to, Broker.EXIM));
-            carriagesList.setCurrentBrocker(Broker.EXIM);
+            carriagesList.setCurrentBroker(Broker.EXIM);
 
         } else if (actionEvent.getSource() == btnShowAll) {
             tblCarriages.setItems(carriagesList.getOptionalList(from, to, null));
-            carriagesList.setCurrentBrocker(null);
+            carriagesList.setCurrentBroker(null);
         }
 
         tblCarriages.scrollTo(carriagesList.getSize());
@@ -193,7 +195,7 @@ public class MainController implements Initializable {
             HBox hBox3 = new HBox(10, declarationId, additionalInformation);
 
             Button btnOk = new Button("OK");
-            List<Carriage> listForReport = carriagesList.getOptionalList(from, to, carriagesList.getCurrentBrocker());
+            List<Carriage> listForReport = carriagesList.getOptionalList(from, to, carriagesList.getCurrentBroker());
 
             VBox root = new VBox(10, hBox1, hBox2, hBox3, btnOk);
             root.setPadding(new Insets(10));
@@ -206,7 +208,7 @@ public class MainController implements Initializable {
             createReportStage.setTitle(bundle.getString("btn.createReport"));
 
             btnOk.setOnMouseClicked(event -> {
-                InOut.createReport(
+                inOut.createReport(
                         listForReport,
                         true,
                         carNumber.isSelected(),

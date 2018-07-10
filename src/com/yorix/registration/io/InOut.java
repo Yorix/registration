@@ -4,175 +4,92 @@ import com.yorix.registration.Broker;
 import com.yorix.registration.Carriage;
 import com.yorix.registration.CarriagesList;
 
-import javax.xml.stream.*;
+import javax.xml.stream.XMLStreamException;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class InOut {
-    private static String[] pathes;
+    private String dataPath;
+    private String dataAltPath;
+    private String reportOutPath;
+    private String reportOutPathAlt;
 
-    static {
+    public InOut() {
+        String[] pathes = new String[0];
         try {
             pathes = ConfigReader.read();
         } catch (FileNotFoundException | XMLStreamException e) {
             e.printStackTrace();
         }
+        dataPath = pathes[0];
+        dataAltPath = pathes[1];
+        reportOutPath = pathes[2];
+        reportOutPathAlt = pathes[3];
     }
 
-    private static String dataPath = pathes[0];
-    private static String dataAltPath = pathes[1];
-    private static String reportOutPath = pathes[2];
-    private static String reportOutPathAlt = pathes[3];
 
-
-    public static CarriagesList read() {
+    public CarriagesList read() {
         CarriagesList carriages;
-
-        carriages = readXml(dataPath);
+        carriages = readCsv(dataPath);
         if (carriages == null)
-            carriages = readXml(dataAltPath);
+            carriages = readCsv(dataAltPath);
         if (carriages == null)
             carriages = new CarriagesList();
-
         return carriages;
     }
 
-    private static CarriagesList readXml(String path) {
-        CarriagesList carriages = new CarriagesList();
-        XMLInputFactory factory = XMLInputFactory.newInstance();
-        XMLStreamReader reader = null;
-        try {
-            reader = factory.createXMLStreamReader(new FileInputStream(path), "UTF-8");
+    private CarriagesList readCsv(String path) {
+        CarriagesList carriages;
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(path))) {
+            carriages = new CarriagesList();
+            String currentLine;
+            while ((currentLine = bufferedReader.readLine()) != null) {
+                Carriage carriage = new Carriage();
+                String[] elements = currentLine.split("\\|", 7);
 
-            Carriage carriage = new Carriage();
-            while (reader.hasNext()) {
-                int event = reader.next();
-                if (event == XMLStreamConstants.START_ELEMENT) {
-                    switch (reader.getLocalName()) {
-                        case "date":
-                            carriage.setDate(LocalDateTime.parse(reader.getElementText(), DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")));
-                            break;
-                        case "carNum":
-                            carriage.setCarNumber(reader.getElementText());
-                            break;
-                        case "phoneNum":
-                            carriage.setPhoneNumber(reader.getElementText());
-                            break;
-                        case "consignee":
-                            carriage.setConsignee(reader.getElementText());
-                            break;
-                        case "broker":
-                            carriage.setBroker(Broker.valueOf(reader.getElementText()));
-                            break;
-                        case "decId":
-                            carriage.setDeclarationId(reader.getElementText());
-                            break;
-                        case "addInfo":
-                            carriage.setAdditionalInformation(reader.getElementText());
-                    }
-                }
-
-                if (event == XMLStreamConstants.END_ELEMENT && reader.getLocalName().equals("carriage")) {
-                    carriages.add(carriage);
-                    carriage = new Carriage();
-                }
+                carriage.setDate(LocalDateTime.parse(elements[0], DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")));
+                carriage.setCarNumber(elements[1]);
+                carriage.setPhoneNumber(elements[2]);
+                carriage.setConsignee(elements[3]);
+                carriage.setBroker(Broker.valueOf(elements[4]));
+                carriage.setDeclarationId(elements[5]);
+                carriage.setAdditionalInformation(elements[6]);
+                carriages.add(carriage);
             }
-
-        } catch (XMLStreamException | FileNotFoundException e) {
+        } catch (IOException | RuntimeException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                if (reader != null)
-                    reader.close();
-            } catch (XMLStreamException e) {
-                e.printStackTrace();
-            }
+            carriages = null;
         }
-
         return carriages;
     }
 
-    public static void write(CarriagesList carriages) {
-        writeXml(carriages, dataPath);
+    public void write(CarriagesList carriages) {
+        writeCsv(carriages, dataPath);
 
-        CarriagesList carriagesAlt = readXml(dataAltPath);
+        CarriagesList carriagesAlt = readCsv(dataAltPath);
         if (carriagesAlt == null || carriages.getCarriages().size() >= carriagesAlt.getCarriages().size())
-            writeXml(carriages, dataAltPath);
+            writeCsv(carriages, dataAltPath);
     }
 
-    private static void writeXml(CarriagesList carriages, String path) {
-        XMLOutputFactory factory = XMLOutputFactory.newFactory();
-        XMLStreamWriter writer = null;
-        try {
-            writer = factory.createXMLStreamWriter(new FileOutputStream(path), "UTF-8");
-
-            writer.writeStartDocument("UTF-8", "1.0");
-            writer.writeCharacters("\n");
-            writer.writeStartElement("carriages");
-
+    private void writeCsv(CarriagesList carriages, String path) {
+        try (OutputStream outputStream = new FileOutputStream(path)) {
             for (Carriage carriage : carriages.getCarriages()) {
-                writer.writeCharacters("\n\t");
-                writer.writeStartElement("carriage");
-
-                writer.writeCharacters("\n\t\t");
-                writer.writeStartElement("date");
-                writer.writeCharacters(carriage.getDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")));
-                writer.writeEndElement();
-
-                writer.writeCharacters("\n\t\t");
-                writer.writeStartElement("carNum");
-                writer.writeCharacters(carriage.getCarNumber());
-                writer.writeEndElement();
-
-                writer.writeCharacters("\n\t\t");
-                writer.writeStartElement("phoneNum");
-                writer.writeCharacters(carriage.getPhoneNumber());
-                writer.writeEndElement();
-
-                writer.writeCharacters("\n\t\t");
-                writer.writeStartElement("consignee");
-                writer.writeCharacters(carriage.getConsignee());
-                writer.writeEndElement();
-
-                writer.writeCharacters("\n\t\t");
-                writer.writeStartElement("broker");
-                writer.writeCharacters(carriage.getBroker().toString());
-                writer.writeEndElement();
-
-                writer.writeCharacters("\n\t\t");
-                writer.writeStartElement("decId");
-                writer.writeCharacters(carriage.getDeclarationId());
-                writer.writeEndElement();
-
-                writer.writeCharacters("\n\t\t");
-                writer.writeStartElement("addInfo");
-                writer.writeCharacters(carriage.getAdditionalInformation());
-                writer.writeEndElement();
-
-                writer.writeCharacters("\n\t");
-                writer.writeEndElement();
+                outputStream.write((carriage.getDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")) + "|").getBytes("Cp1251"));
+                outputStream.write((carriage.getCarNumber() + "|").getBytes("Cp1251"));
+                outputStream.write((carriage.getPhoneNumber() + "|").getBytes("Cp1251"));
+                outputStream.write((carriage.getConsignee() + "|").getBytes("Cp1251"));
+                outputStream.write((carriage.getBroker() + "|").getBytes("Cp1251"));
+                outputStream.write((carriage.getDeclarationId() + "|").getBytes("Cp1251"));
+                outputStream.write((carriage.getAdditionalInformation() + "\n").getBytes("Cp1251"));
             }
-
-            writer.writeCharacters("\n");
-            writer.writeEndElement();
-            writer.writeEndDocument();
-
-
-        } catch (XMLStreamException | FileNotFoundException e) {
+        } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                if (writer != null)
-                    writer.close();
-            } catch (XMLStreamException e) {
-                e.printStackTrace();
-            }
         }
     }
 
-    public static void createReport(
+    public void createReport(
             List<Carriage> carriages,
             boolean date,
             boolean carNumber,
