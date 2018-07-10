@@ -1,64 +1,37 @@
 package com.yorix.registration.io;
 
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-import java.io.IOException;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 public class ConfigReader {
 
-    public static String[] read() {
+    public static String[] read() throws FileNotFoundException, XMLStreamException {
         String[] pathes = new String[4];
-        DefaultHandler handler = new DefaultHandler() {
-            boolean dataPath;
-            boolean dataAltPath;
-            boolean reportOutPath;
-            boolean reportOutAltPath;
 
-            @Override
-            public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-                if (qName.equals("dataPath"))
-                    dataPath = true;
-                if (qName.equals("dataAltPath"))
-                    dataAltPath = true;
-                if (qName.equals("reportOutPath"))
-                    reportOutPath = true;
-                if (qName.equals("reportOutAltPath"))
-                    reportOutAltPath = true;
-            }
+        XMLInputFactory factory = XMLInputFactory.newInstance();
+        XMLStreamReader reader = factory.createXMLStreamReader(new FileInputStream("config.xml"));
 
-            @Override
-            public void characters(char[] ch, int start, int length) throws SAXException {
-                if (dataPath) {
-                    dataPath = false;
-                    pathes[0] = new String(ch, start, length);
-                }
-                if (dataAltPath) {
-                    dataAltPath = false;
-                    pathes[1] = new String(ch, start, length);
-                }
-                if (reportOutPath) {
-                    reportOutPath = false;
-                    pathes[2] = new String(ch, start, length);
-                }
-                if (reportOutAltPath) {
-                    reportOutAltPath = false;
-                    pathes[3] = new String(ch, start, length);
+        while (reader.hasNext()) {
+            if (reader.next() == XMLStreamConstants.START_ELEMENT) {
+                switch (reader.getLocalName()) {
+                    case "dataPath":
+                        pathes[0] = reader.getElementText();
+                        break;
+                    case "dataAltPath":
+                        pathes[1] = reader.getElementText();
+                        break;
+                    case "reportOutPath":
+                        pathes[2] = reader.getElementText();
+                        break;
+                    case "reportOutAltPath":
+                        pathes[3] = reader.getElementText();
                 }
             }
-        };
-
-        try {
-            SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
-            parser.parse("config.xml", handler);
-        } catch (ParserConfigurationException | SAXException | IOException e) {
-            e.printStackTrace();
         }
-
         return pathes;
     }
 }

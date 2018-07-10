@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <path>
-    <dataPath>C:/ProgramData/carriagesList.dat</dataPath>
-    <dataAltPath>E:/Y/carriagesList.dat</dataAltPath>
+    <dataPath>C:/ProgramData/carriagesList.xml</dataPath>
+    <dataAltPath>E:/Y/carriagesList.xml</dataAltPath>
     <reportOutPath>C:/Users/ВипБизнесКучурган/Desktop/REPORT.csv</reportOutPath>
     <reportOutAltPath>E:/REPORT.csv</reportOutAltPath>
 </path>

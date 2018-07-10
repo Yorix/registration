@@ -1,8 +1,6 @@
 package com.yorix.registration;
 
-import java.io.Serializable;
-
-public enum Broker implements Serializable {
+public enum Broker {
     POLITRANS, EXIM;
 
     private String s = this.name();

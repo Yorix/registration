@@ -5,7 +5,6 @@ import com.yorix.registration.Carriage;
 import com.yorix.registration.CarriagesList;
 import com.yorix.registration.io.InOut;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;

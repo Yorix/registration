@@ -2,14 +2,10 @@ package com.yorix.registration;
 
 import javafx.beans.property.SimpleStringProperty;
 
-import java.io.Externalizable;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class Carriage implements Externalizable {
+public class Carriage {
 
     private SimpleStringProperty date;
     private SimpleStringProperty carNumber;
@@ -20,6 +16,12 @@ public class Carriage implements Externalizable {
     private String additionalInformation;
 
     public Carriage() {
+        this.date = new SimpleStringProperty();
+        this.carNumber = new SimpleStringProperty();
+        this.phoneNumber = new SimpleStringProperty();
+        this.consignee = new SimpleStringProperty();
+        this.broker = new SimpleStringProperty();
+        this.declarationId = new SimpleStringProperty();
     }
 
     public Carriage(LocalDateTime date,
@@ -125,27 +127,5 @@ public class Carriage implements Externalizable {
                 ", consignee='" + consignee + '\'' +
                 ", broker=" + broker +
                 '}';
-    }
-
-    @Override
-    public void writeExternal(ObjectOutput out) throws IOException {
-        out.writeObject(date.get());
-        out.writeObject(carNumber.get());
-        out.writeObject(phoneNumber.get());
-        out.writeObject(consignee.get());
-        out.writeObject(broker.get());
-        out.writeObject(declarationId.get());
-        out.writeObject(additionalInformation);
-    }
-
-    @Override
-    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        date = new SimpleStringProperty(in.readObject().toString());
-        carNumber = new SimpleStringProperty(in.readObject().toString());
-        phoneNumber = new SimpleStringProperty(in.readObject().toString());
-        consignee = new SimpleStringProperty(in.readObject().toString());
-        broker = new SimpleStringProperty(in.readObject().toString());
-        declarationId = new SimpleStringProperty(in.readObject().toString());
-        additionalInformation = in.readObject().toString();
     }
 }
