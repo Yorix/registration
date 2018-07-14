@@ -19,26 +19,31 @@
     <AnchorPane>
         <HBox spacing="10.0" AnchorPane.rightAnchor="0.0">
             <Label text="%lbl.carNum" />
-            <TextField fx:id="carId" />
+            <TextField fx:id="txtCarId" />
         </HBox>
     </AnchorPane>
+   <AnchorPane layoutX="20.0" layoutY="20.0">
+      <children>
+         <Button mnemonicParsing="false" onAction="#findPhone" text="%btn.findPhone" AnchorPane.rightAnchor="0.0" />
+      </children>
+   </AnchorPane>
     <AnchorPane>
         <HBox spacing="5.0" AnchorPane.rightAnchor="0.0">
             <Label text="%lbl.phoneNum" />
-         <ChoiceBox fx:id="countryCode" prefWidth="55.0" />
-            <TextField fx:id="phoneNum" prefWidth="90.0" />
+         <ChoiceBox fx:id="chbCountryCode" prefWidth="55.0" />
+            <TextField fx:id="txtPhoneNum" prefWidth="90.0" />
         </HBox>
     </AnchorPane>
     <AnchorPane>
         <HBox spacing="10.0" AnchorPane.rightAnchor="0.0">
             <Label text="%lbl.consignee" />
-            <TextField fx:id="consignee" />
+            <TextField fx:id="txtConsignee" />
         </HBox>
     </AnchorPane>
     <AnchorPane layoutX="20.0" layoutY="90.0">
         <HBox spacing="10.0" AnchorPane.rightAnchor="0.0">
             <Label text="%lbl.decId" />
-            <TextField fx:id="decId" />
+            <TextField fx:id="txtDecId" />
         </HBox>
     </AnchorPane>
     <AnchorPane layoutX="20.0" layoutY="90.0">

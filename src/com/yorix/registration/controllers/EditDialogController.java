@@ -5,6 +5,7 @@ import com.yorix.registration.Carriage;
 import com.yorix.registration.CarriagesList;
 import com.yorix.registration.io.InOut;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -24,9 +25,9 @@ public class EditDialogController implements Initializable {
     @FXML
     private TextArea txtAdditionalInformation;
     @FXML
-    private ChoiceBox<String> countryCode;
+    private ChoiceBox<String> chbCountryCode;
     @FXML
-    private TextField carId, phoneNum, consignee, decId;
+    private TextField txtCarId, txtPhoneNum, txtConsignee, txtDecId;
     @FXML
     private RadioButton rdbPolitrans, rdbExim;
 
@@ -41,8 +42,8 @@ public class EditDialogController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         bundle = resources;
         inOut = new InOut();
-        countryCode.setItems(FXCollections.observableArrayList("+380", "+373"));
-        countryCode.getSelectionModel().selectFirst();
+        chbCountryCode.setItems(FXCollections.observableArrayList("+380", "+373"));
+        chbCountryCode.getSelectionModel().selectFirst();
         ToggleGroup brokers = new ToggleGroup();
         rdbPolitrans.setToggleGroup(brokers);
         rdbExim.setToggleGroup(brokers);
@@ -50,8 +51,8 @@ public class EditDialogController implements Initializable {
     }
 
     private void initListeners() {
-        phoneNum.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (countryCode.getSelectionModel().getSelectedItem().equals("+380")
+        txtPhoneNum.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (chbCountryCode.getSelectionModel().getSelectedItem().equals("+380")
                     && !newValue.matches(
                     "[1-9]?|" +
                             "\\d{2}\\s?|" +
@@ -61,10 +62,10 @@ public class EditDialogController implements Initializable {
                             "\\d{2}\\s\\d{3}\\s\\d{2}\\s|" +
                             "\\d{2}\\s\\d{3}\\s\\d{2}\\s\\d{1,2}|" +
                             "\\d{10}")) {
-                phoneNum.setText(oldValue);
+                txtPhoneNum.setText(oldValue);
             }
 
-            if (countryCode.getSelectionModel().getSelectedItem().equals("+373")
+            if (chbCountryCode.getSelectionModel().getSelectedItem().equals("+373")
                     && !newValue.matches(
                     "[1-9]?|" +
                             "\\d{2}\\s?|" +
@@ -72,66 +73,66 @@ public class EditDialogController implements Initializable {
                             "\\d{2}\\s\\d{3}\\s|" +
                             "\\d{2}\\s\\d{3}\\s\\d{1,3}|" +
                             "\\d{9}")) {
-                phoneNum.setText(oldValue);
+                txtPhoneNum.setText(oldValue);
             }
 
-            if (countryCode.getSelectionModel().getSelectedItem().equals("+380")
-                    && newValue.matches("^\\d{9}")) {
-                phoneNum.setText(newValue.substring(0, 2) + " " +
+            if (chbCountryCode.getSelectionModel().getSelectedItem().equals("+380")
+                    && newValue.matches("^\\d{9}$")) {
+                txtPhoneNum.setText(newValue.substring(0, 2) + " " +
                         newValue.substring(2, 5) + " " +
                         newValue.substring(5, 7) + " " +
                         newValue.substring(7, 9));
             }
 
-            if (countryCode.getSelectionModel().getSelectedItem().equals("+380")
-                    && newValue.matches("^0\\d{9}")) {
-                phoneNum.setText(newValue.substring(1, 3) + " " +
+            if (chbCountryCode.getSelectionModel().getSelectedItem().equals("+380")
+                    && newValue.matches("^[0\\s]\\d{9}$")) {
+                txtPhoneNum.setText(newValue.substring(1, 3) + " " +
                         newValue.substring(3, 6) + " " +
                         newValue.substring(6, 8) + " " +
                         newValue.substring(8, 10));
             }
 
-            if (countryCode.getSelectionModel().getSelectedItem().equals("+373")
-                    && newValue.matches("^\\d{8}")) {
-                phoneNum.setText(newValue.substring(0, 2) + " " +
+            if (chbCountryCode.getSelectionModel().getSelectedItem().equals("+373")
+                    && newValue.matches("^\\d{8}$")) {
+                txtPhoneNum.setText(newValue.substring(0, 2) + " " +
                         newValue.substring(2, 5) + " " +
                         newValue.substring(5, 8));
             }
 
-            if (countryCode.getSelectionModel().getSelectedItem().equals("+373")
-                    && newValue.matches("^0\\d{8}")) {
-                phoneNum.setText(newValue.substring(1, 3) + " " +
+            if (chbCountryCode.getSelectionModel().getSelectedItem().equals("+373")
+                    && newValue.matches("^[0\\s]\\d{8}$")) {
+                txtPhoneNum.setText(newValue.substring(1, 3) + " " +
                         newValue.substring(3, 6) + " " +
                         newValue.substring(6, 9));
             }
 
-            if (newValue.matches("^\\+380\\d{9}")) {
-                countryCode.getSelectionModel().select("+380");
-                phoneNum.setText(newValue.substring(4, 6) + " " +
+            if (newValue.matches("^\\+380\\d{9}$")) {
+                chbCountryCode.getSelectionModel().select("+380");
+                txtPhoneNum.setText(newValue.substring(4, 6) + " " +
                         newValue.substring(6, 9) + " " +
                         newValue.substring(9, 11) + " " +
                         newValue.substring(11, 13));
             }
 
-            if (newValue.matches("^\\+373\\d{8}")) {
-                countryCode.getSelectionModel().select("+373");
-                phoneNum.setText(newValue.substring(4, 6) + " " +
+            if (newValue.matches("^\\+373\\d{8}$")) {
+                chbCountryCode.getSelectionModel().select("+373");
+                txtPhoneNum.setText(newValue.substring(4, 6) + " " +
                         newValue.substring(6, 9) + " " +
                         newValue.substring(9, 12));
             }
 
-            if (countryCode.getSelectionModel().getSelectedItem().equals("+380")
+            if (chbCountryCode.getSelectionModel().getSelectedItem().equals("+380")
                     && newValue.matches(".*\\d")
                     && (oldValue.length() == 2
                     || oldValue.length() == 6
                     || oldValue.length() == 9))
-                phoneNum.setText(newValue.replace(oldValue, oldValue + " "));
+                txtPhoneNum.setText(newValue.replace(oldValue, oldValue + " "));
 
-            if (countryCode.getSelectionModel().getSelectedItem().equals("+373")
+            if (chbCountryCode.getSelectionModel().getSelectedItem().equals("+373")
                     && newValue.matches(".*\\d")
                     && (oldValue.length() == 2
                     || oldValue.length() == 6))
-                phoneNum.setText(newValue.replace(oldValue, oldValue + " "));
+                txtPhoneNum.setText(newValue.replace(oldValue, oldValue + " "));
         });
 
         txtTime.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -151,13 +152,13 @@ public class EditDialogController implements Initializable {
     }
 
     public void execute() {
-        if (carId.getText().isEmpty()) {
+        if (txtCarId.getText().isEmpty()) {
             showPopup(bundle.getString("report.carNumberError"));
             return;
         }
 
         String pattern = "^$|^(\\d{2}\\s\\d{3}\\s\\d{2}\\s\\d{2})$|^(\\d{2}\\s\\d{3}\\s\\d{3})$";
-        String phone = phoneNum.getText();
+        String phone = txtPhoneNum.getText();
 
         if (!phone.matches(pattern)) {
             showPopup(bundle.getString("report.phoneNumberError"));
@@ -179,15 +180,15 @@ public class EditDialogController implements Initializable {
 
         String dateTime = currentDate.getValue().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")) + " " + txtTime.getText();
         if (currentCarriage != null) {
-            currentCarriage.setCarNumber(carId.getText());
+            currentCarriage.setCarNumber(txtCarId.getText().replaceAll("[ -]", ""));
             currentCarriage.setPhoneNumber(
-                    phoneNum.getText().length() > 5
-                            ? countryCode.getSelectionModel().getSelectedItem() + " " + phoneNum.getText()
+                    txtPhoneNum.getText().length() > 5
+                            ? chbCountryCode.getSelectionModel().getSelectedItem() + " " + txtPhoneNum.getText()
                             : ""
             );
-            currentCarriage.setConsignee(consignee.getText());
+            currentCarriage.setConsignee(txtConsignee.getText());
             currentCarriage.setBroker(broker);
-            currentCarriage.setDeclarationId(decId.getText());
+            currentCarriage.setDeclarationId(txtDecId.getText());
             currentCarriage.setAdditionalInformation(txtAdditionalInformation.getText());
             currentCarriage.setDate(LocalDateTime.parse(dateTime, DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")));
 
@@ -195,11 +196,11 @@ public class EditDialogController implements Initializable {
             carriagesList.add(
                     new Carriage(
                             LocalDateTime.parse(dateTime, DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")),
-                            carId.getText(),
-                            countryCode.getSelectionModel().getSelectedItem() + " " + phoneNum.getText(),
-                            consignee.getText(),
+                            txtCarId.getText().replaceAll("[ -]", ""),
+                            chbCountryCode.getSelectionModel().getSelectedItem() + " " + txtPhoneNum.getText(),
+                            txtConsignee.getText(),
                             broker,
-                            decId.getText(),
+                            txtDecId.getText(),
                             txtAdditionalInformation.getText()
                     )
             );
@@ -219,11 +220,11 @@ public class EditDialogController implements Initializable {
     }
 
     void clearFields() {
-        carId.clear();
-        countryCode.getSelectionModel().selectFirst();
-        phoneNum.clear();
-        consignee.clear();
-        decId.clear();
+        txtCarId.clear();
+        chbCountryCode.getSelectionModel().selectFirst();
+        txtPhoneNum.clear();
+        txtConsignee.clear();
+        txtDecId.clear();
         rdbPolitrans.setSelected(false);
         rdbExim.setSelected(false);
         txtAdditionalInformation.clear();
@@ -234,23 +235,33 @@ public class EditDialogController implements Initializable {
     }
 
     private void fillFields() {
-        carId.setText(currentCarriage.getCarNumber());
-        countryCode.getSelectionModel().select(
+        txtCarId.setText(currentCarriage.getCarNumber());
+        chbCountryCode.getSelectionModel().select(
                 currentCarriage.getPhoneNumber().isEmpty()
                         ? "+380"
                         : currentCarriage.getPhoneNumber().substring(0, 4));
-        phoneNum.setText(
+        txtPhoneNum.setText(
                 currentCarriage.getPhoneNumber().isEmpty()
                         ? ""
                         : currentCarriage.getPhoneNumber().substring(5));
-        consignee.setText(currentCarriage.getConsignee());
-        decId.setText(currentCarriage.getDeclarationId());
+        txtConsignee.setText(currentCarriage.getConsignee());
+        txtDecId.setText(currentCarriage.getDeclarationId());
         rdbPolitrans.setSelected(currentCarriage.getBroker().equals(Broker.POLITRANS));
         rdbExim.setSelected(currentCarriage.getBroker().equals(Broker.EXIM));
         txtAdditionalInformation.setText(currentCarriage.getAdditionalInformation());
         currentDate.setValue(currentCarriage.getDate().toLocalDate());
         String time = currentCarriage.getDate().format(DateTimeFormatter.ofPattern("HH:mm"));
         txtTime.setText(time);
+    }
+
+    public void findPhone(ActionEvent actionEvent) {
+        for (Carriage carriage : carriagesList.getCarriages()) {
+            if (carriage.getCarNumber().equalsIgnoreCase(txtCarId.getText().replaceAll("[ -]", ""))
+                    && !carriage.getPhoneNumber().equals("")) {
+                chbCountryCode.getSelectionModel().select(carriage.getPhoneNumber().substring(0, 4));
+                txtPhoneNum.setText(carriage.getPhoneNumber().substring(5));
+            }
+        }
     }
 
     void setCurrentCarriage(Carriage currentCarriage) {
