@@ -15,6 +15,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.LinkedList;
 import java.util.ResourceBundle;
 
 public class EditDialogController implements Initializable {
@@ -148,6 +149,21 @@ public class EditDialogController implements Initializable {
 
             if (newValue.matches("^(([0,1][0-9])|(2[0-3]))") && newValue.length() > oldValue.length())
                 txtTime.setText(newValue + ":");
+        });
+
+        txtConsignee.textProperty().addListener((observable, oldValue, newValue) -> {
+            LinkedList<String> matches = new LinkedList<>();
+            for (Carriage carriage : carriagesList.getCarriages()) {
+                if (!newValue.equals("")
+                        && carriage.getConsignee().toLowerCase().startsWith(newValue.toLowerCase())
+                        && newValue.length() > oldValue.length()
+                        && !matches.contains(carriage.getConsignee().split(",")[0])) {
+                    matches.add(carriage.getConsignee());
+                }
+            }
+            if (matches.size() == 1) {
+                txtConsignee.setText(matches.get(0));
+            }
         });
     }
 
