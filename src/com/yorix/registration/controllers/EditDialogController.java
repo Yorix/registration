@@ -222,6 +222,13 @@ public class EditDialogController implements Initializable {
             );
         }
 
+        carriagesList.getCarriages().sort((o1, o2) -> {
+            if (o1.getDate().isAfter(o2.getDate()))
+                return 1;
+            else if (o1.getDate().isBefore(o2.getDate()))
+                return -1;
+            else return 0;
+        });
 
         inOut.write(carriagesList);
         clearFields();
