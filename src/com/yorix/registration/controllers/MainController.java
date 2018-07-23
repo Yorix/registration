@@ -91,7 +91,7 @@ public class MainController implements Initializable {
                         to = LocalDate.parse(newVal, DateTimeFormatter.ofPattern("dd.MM.yyyy"))
         );
 
-        carriagesList.getCarriages().addListener((ListChangeListener<Carriage>) c -> inOut.write(carriagesList));
+//        carriagesList.getCarriages().addListener((ListChangeListener<Carriage>) c -> inOut.write(carriagesList));
 
         tblCarriages.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) editCarriage(tblCarriages.getSelectionModel().getSelectedItem());

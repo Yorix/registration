@@ -195,32 +195,27 @@ public class EditDialogController implements Initializable {
         }
 
         String dateTime = currentDate.getValue().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")) + " " + txtTime.getText();
-        if (currentCarriage != null) {
-            currentCarriage.setCarNumber(txtCarId.getText().replaceAll("[ -]", ""));
-            currentCarriage.setPhoneNumber(
-                    txtPhoneNum.getText().length() > 5
-                            ? chbCountryCode.getSelectionModel().getSelectedItem() + " " + txtPhoneNum.getText()
-                            : ""
-            );
-            currentCarriage.setConsignee(txtConsignee.getText());
-            currentCarriage.setBroker(broker);
-            currentCarriage.setDeclarationId(txtDecId.getText());
-            currentCarriage.setAdditionalInformation(txtAdditionalInformation.getText());
-            currentCarriage.setDate(LocalDateTime.parse(dateTime, DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")));
 
-        } else {
-            carriagesList.add(
-                    new Carriage(
-                            LocalDateTime.parse(dateTime, DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")),
-                            txtCarId.getText().replaceAll("[ -]", ""),
-                            chbCountryCode.getSelectionModel().getSelectedItem() + " " + txtPhoneNum.getText(),
-                            txtConsignee.getText(),
-                            broker,
-                            txtDecId.getText(),
-                            txtAdditionalInformation.getText()
-                    )
-            );
+        boolean isNew = false;
+        if (currentCarriage == null) {
+            currentCarriage = new Carriage();
+            isNew = true;
         }
+
+        currentCarriage.setCarNumber(txtCarId.getText().replaceAll("[ -]", "").toUpperCase());
+        currentCarriage.setPhoneNumber(
+                txtPhoneNum.getText().length() > 5
+                        ? chbCountryCode.getSelectionModel().getSelectedItem() + " " + txtPhoneNum.getText()
+                        : ""
+        );
+        currentCarriage.setConsignee(txtConsignee.getText());
+        currentCarriage.setBroker(broker);
+        currentCarriage.setDeclarationId(txtDecId.getText());
+        currentCarriage.setAdditionalInformation(txtAdditionalInformation.getText());
+        currentCarriage.setDate(LocalDateTime.parse(dateTime, DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")));
+
+        if (isNew)
+            carriagesList.add(currentCarriage);
 
         carriagesList.getCarriages().sort((o1, o2) -> {
             if (o1.getDate().isAfter(o2.getDate()))
