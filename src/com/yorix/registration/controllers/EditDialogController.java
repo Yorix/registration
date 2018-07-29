@@ -5,7 +5,6 @@ import com.yorix.registration.Carriage;
 import com.yorix.registration.CarriagesList;
 import com.yorix.registration.io.InOut;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -169,7 +168,7 @@ public class EditDialogController implements Initializable {
 
     public void execute() {
         if (txtCarId.getText().isEmpty()) {
-            showPopup(bundle.getString("report.carNumberError"));
+            showAlert(bundle.getString("report.carNumberError"));
             return;
         }
 
@@ -177,7 +176,7 @@ public class EditDialogController implements Initializable {
         String phone = txtPhoneNum.getText();
 
         if (!phone.matches(pattern)) {
-            showPopup(bundle.getString("report.phoneNumberError"));
+            showAlert(bundle.getString("report.phoneNumberError"));
             return;
         }
 
@@ -185,12 +184,12 @@ public class EditDialogController implements Initializable {
         if (rdbPolitrans.isSelected()) broker = Broker.POLITRANS;
         else if (rdbExim.isSelected()) broker = Broker.EXIM;
         else {
-            showPopup(bundle.getString("report.emptyBroker"));
+            showAlert(bundle.getString("report.emptyBroker"));
             return;
         }
 
         if (txtTime.getText().length() < 5) {
-            showPopup(bundle.getString("report.incorrectTime"));
+            showAlert(bundle.getString("report.incorrectTime"));
             return;
         }
 
@@ -230,10 +229,11 @@ public class EditDialogController implements Initializable {
         currentStage.hide();
     }
 
-    private void showPopup(String message) {
+    private void showAlert(String message) {
         Alert dialog = new Alert(Alert.AlertType.INFORMATION);
         dialog.setTitle(message);
         dialog.setHeaderText(message);
+        dialog.getDialogPane().getScene().getStylesheets().add("styles/main.css");
         dialog.show();
     }
 
@@ -272,7 +272,7 @@ public class EditDialogController implements Initializable {
         txtTime.setText(time);
     }
 
-    public void findPhone(ActionEvent actionEvent) {
+    public void findPhone() {
         for (Carriage carriage : carriagesList.getCarriages()) {
             if (carriage.getCarNumber().equalsIgnoreCase(txtCarId.getText().replaceAll("[ -]", ""))
                     && !carriage.getPhoneNumber().equals("")) {

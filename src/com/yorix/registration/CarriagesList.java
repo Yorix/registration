@@ -17,7 +17,16 @@ public class CarriagesList {
 
     public void add(Carriage carriage) {
         carriages.add(carriage);
-        if (carriage.getBroker() == currentBroker || currentBroker == null) optional.add(carriage);
+        if (carriage.getBroker() == currentBroker || currentBroker == null) {
+            optional.add(carriage);
+            optional.sort((o1, o2) -> {
+                if (o1.getDate().isAfter(o2.getDate()))
+                    return 1;
+                else if (o1.getDate().isBefore(o2.getDate()))
+                    return -1;
+                else return 0;
+            });
+        }
     }
 
     public void delete(Carriage carriage) {

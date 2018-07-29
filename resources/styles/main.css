@@ -1,0 +1,111 @@
+.root {
+    -fx-background-color: '#69c';
+}
+
+.text-field,
+.text-area .content,
+.choice-box, .choice-box .context-menu,
+.check-box .box {
+    -fx-background-color: '#9cf';
+}
+
+
+
+.button {
+    -fx-background-color: linear-gradient(#39d, #4bf);
+    -fx-background-radius: 10px;
+    -fx-text-fill: '#005';
+    -fx-effect: dropshadow(gaussian, #522, 10, 0.3, 2, 2);
+}
+
+.button:hover {
+    -fx-background-color: '#4bf';
+}
+
+.button:pressed {
+    -fx-background-color: linear-gradient(#4bf, #39d);
+    -fx-effect: dropshadow(gaussian, #522, 5, 0.3, 0, 0);
+}
+
+
+
+.table-view .column-header,
+.table-view .filler {
+    -fx-background-color: linear-gradient(#27a, #5ad);
+}
+
+.table-view .cell:even {
+    -fx-control-inner-background: '#9df';
+    -fx-accent: derive(-fx-control-inner-background, -50%);
+}
+
+.table-view .cell:odd {
+    -fx-control-inner-background: '#90d0f0';
+    -fx-accent: derive(-fx-control-inner-background, -50%);
+}
+
+
+
+.date-picker .arrow-button {
+    -fx-background-color: '#80b0f0';
+}
+
+.date-picker .arrow-button .arrow {
+    -fx-background-color: #fff, #25f;
+}
+
+.date-picker-popup {
+    -fx-background-color: '#80b0f0';
+    -fx-effect: dropshadow(gaussian, rgba(100,30,30,0.7), 12, 0.0, 4, 8);
+}
+
+.date-picker-popup .month-year-pane {
+    -fx-background-color: linear-gradient(#69c, #9cf);
+}
+
+.date-picker-popup .date-cell {
+    -fx-background-color: '#9df';
+    -fx-background-insets: 1, 2;
+    -fx-padding: 0;
+    -fx-alignment: BASELINE_CENTER;
+    -fx-opacity: 1.0;
+}
+
+.date-picker-popup .day-name-cell,
+.date-picker-popup .week-number-cell {
+    -fx-background-color: '#69c';
+}
+
+.date-picker-popup .day-cell:focused,
+.date-picker-popup .today:focused {
+    -fx-background-color: '#03f';
+}
+
+.date-picker-popup .today {
+    -fx-background-color: '#6af';
+}
+
+.date-picker-popup .previous-month,
+.date-picker-popup .next-month {
+    -fx-background-color: '#bde';
+}
+
+
+
+.scroll-bar {
+    -fx-background-color: '#27a';
+    -fx-pref-height: 15px;
+    -fx-pref-width: 15px;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: '#00f';
+}
+
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button,
+.scroll-bar .increment-button .increment-arrow,
+.scroll-bar .decrement-button .decrement-arrow {
+    -fx-pref-height: 0px;
+    -fx-pref-width: 0px;
+}

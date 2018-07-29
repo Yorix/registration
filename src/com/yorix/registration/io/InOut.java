@@ -110,7 +110,7 @@ public class InOut {
             if (additionalInformation) builder.append(carriage.getAdditionalInformation()).append(";");
             if (builder.length() > 0) builder.append("\n");
         });
-        builder.append("Всего: ;").append(carriages.size());
+        builder.append("\nTotal: ;").append(carriages.size());
 
         try (OutputStream os = new FileOutputStream(reportOutPath)) {
             os.write(builder.toString().getBytes("Cp1251"));

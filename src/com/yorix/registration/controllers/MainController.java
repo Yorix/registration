@@ -18,6 +18,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.IOException;
 import java.net.URL;
@@ -117,7 +118,9 @@ public class MainController implements Initializable {
     }
 
     public void editCarriage() {
-        editCarriage(tblCarriages.getSelectionModel().getSelectedItem());
+        Carriage current = tblCarriages.getSelectionModel().getSelectedItem();
+        if (current == null) return;
+        editCarriage(current);
     }
 
     private void editCarriage(Carriage carriage) {
@@ -133,11 +136,14 @@ public class MainController implements Initializable {
         dialog.setTitle(bundle.getString("btn.deleteNote") + "?");
         dialog.setHeaderText(bundle.getString("btn.deleteNote") + "?");
         dialog.setContentText(current.getCarNumber());
+        dialog.getDialogPane().getScene().getStylesheets().add("styles/main.css");
 
         Optional<ButtonType> option = dialog.showAndWait();
 
-        if (option.get() == ButtonType.OK)
+        if (option.get() == ButtonType.OK) {
             carriagesList.delete(current);
+            inOut.write(carriagesList);
+        }
     }
 
     private void showEditDialog(String title) {
@@ -189,15 +195,16 @@ public class MainController implements Initializable {
 
             carNumber.setSelected(true);
             consignee.setSelected(true);
+            additionalInformation.setSelected(true);
 
-            HBox hBox1 = new HBox(10, carNumber, phoneNumber);
-            HBox hBox2 = new HBox(10, consignee, broker);
-            HBox hBox3 = new HBox(10, declarationId, additionalInformation);
+            VBox vBox1 = new VBox(10, carNumber, consignee, declarationId);
+            VBox vBox2 = new VBox(10, phoneNumber, broker, additionalInformation);
+            HBox hBox = new HBox(20, vBox1, vBox2);
 
             Button btnOk = new Button("OK");
             List<Carriage> listForReport = carriagesList.getOptionalList(from, to, carriagesList.getCurrentBroker());
 
-            VBox root = new VBox(10, hBox1, hBox2, hBox3, btnOk);
+            VBox root = new VBox(10, hBox, btnOk);
             root.setPadding(new Insets(10));
 
             createReportStage = new Stage();
@@ -222,6 +229,7 @@ public class MainController implements Initializable {
             });
         }
 
+        createReportStage.getScene().getStylesheets().add("styles/main.css");
         createReportStage.show();
     }
 }
