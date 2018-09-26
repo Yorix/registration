@@ -4,7 +4,6 @@ import com.yorix.registration.Broker;
 import com.yorix.registration.Carriage;
 import com.yorix.registration.CarriagesList;
 import com.yorix.registration.io.InOut;
-import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,7 +17,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 import java.io.IOException;
 import java.net.URL;
@@ -60,7 +58,7 @@ public class MainController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         bundle = resources;
         inOut = new InOut();
-        carriagesList = inOut.read();
+        carriagesList = inOut.read(LocalDate.now().getYear());
 
         to = LocalDate.now();
         from = LocalDate.of(to.getYear(), to.getMonthValue(), 1);
@@ -88,11 +86,15 @@ public class MainController implements Initializable {
         );
 
         dtpTo.getEditor().textProperty().addListener(
-                (observable, oldVal, newVal) ->
-                        to = LocalDate.parse(newVal, DateTimeFormatter.ofPattern("dd.MM.yyyy"))
+                (observable, oldVal, newVal) -> {
+                    to = LocalDate.parse(newVal, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+                    if (from.getYear() != Integer.valueOf(newVal.substring(6))) {
+                        editDialogController.showAlert(bundle.getString("report.wrongYear"));
+                        from = LocalDate.of(to.getYear(), 1, 1);
+                        dtpFrom.setValue(from);
+                    }
+                }
         );
-
-//        carriagesList.getCarriages().addListener((ListChangeListener<Carriage>) c -> inOut.write(carriagesList));
 
         tblCarriages.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) editCarriage(tblCarriages.getSelectionModel().getSelectedItem());
@@ -141,8 +143,9 @@ public class MainController implements Initializable {
         Optional<ButtonType> option = dialog.showAndWait();
 
         if (option.get() == ButtonType.OK) {
+            int year = current.getDate().getYear();
             carriagesList.delete(current);
-            inOut.write(carriagesList);
+            inOut.write(carriagesList, year);
         }
     }
 
@@ -166,6 +169,8 @@ public class MainController implements Initializable {
     }
 
     public void showCarriages(ActionEvent actionEvent) {
+
+        carriagesList = inOut.read(from.getYear());
 
         if (actionEvent.getSource() == btnShowBroker1) {
             tblCarriages.setItems(carriagesList.getOptionalList(from, to, Broker.POLITRANS));

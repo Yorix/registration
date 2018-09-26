@@ -213,6 +213,12 @@ public class EditDialogController implements Initializable {
         currentCarriage.setAdditionalInformation(txtAdditionalInformation.getText());
         currentCarriage.setDate(LocalDateTime.parse(dateTime, DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")));
 
+
+        if (carriagesList.getSize() > 0)
+            if (currentCarriage.getDate().getYear() != carriagesList.getCarriages().get(0).getDate().getYear()) {
+                carriagesList = inOut.read(currentCarriage.getDate().getYear());
+            }
+
         if (isNew)
             carriagesList.add(currentCarriage);
 
@@ -224,12 +230,12 @@ public class EditDialogController implements Initializable {
             else return 0;
         });
 
-        inOut.write(carriagesList);
+        inOut.write(carriagesList, currentCarriage.getDate().getYear());
         clearFields();
         currentStage.hide();
     }
 
-    private void showAlert(String message) {
+    void showAlert(String message) {
         Alert dialog = new Alert(Alert.AlertType.INFORMATION);
         dialog.setTitle(message);
         dialog.setHeaderText(message);

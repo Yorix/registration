@@ -4,7 +4,6 @@ import com.yorix.registration.Broker;
 import com.yorix.registration.Carriage;
 import com.yorix.registration.CarriagesList;
 
-import javax.xml.stream.XMLStreamException;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -14,27 +13,28 @@ public class InOut {
     private String dataPath;
     private String dataAltPath;
     private String reportOutPath;
-    private String reportOutPathAlt;
 
     public InOut() {
-        String[] pathes = new String[0];
-        try {
-            pathes = ConfigReader.read();
-        } catch (FileNotFoundException | XMLStreamException e) {
-            e.printStackTrace();
-        }
-        dataPath = pathes[0];
-        dataAltPath = pathes[1];
-        reportOutPath = pathes[2];
-        reportOutPathAlt = pathes[3];
+        String fileSeparator = System.getProperty("file.separator");
+        dataPath = "C:/ProgramData/Registration/";
+        dataAltPath = System.getProperty("user.home") + fileSeparator + "Documents" + fileSeparator + "Registration" + fileSeparator;
+        reportOutPath = System.getProperty("user.home") + fileSeparator + "Desktop" + fileSeparator + "REPORT.csv";
+
+        File altFolder = new File((dataPath));
+        if (!altFolder.exists())
+            altFolder.mkdir();
+
+        File folder = new File(dataAltPath);
+        if (!folder.exists())
+            folder.mkdir();
     }
 
 
-    public CarriagesList read() {
+    public CarriagesList read(int year) {
         CarriagesList carriages;
-        carriages = readCsv(dataPath);
+        carriages = readCsv(dataPath + year + "_carriagesList.csv");
         if (carriages == null)
-            carriages = readCsv(dataAltPath);
+            carriages = readCsv(dataAltPath +  year + "_carriagesList.csv");
         if (carriages == null)
             carriages = new CarriagesList();
         return carriages;
@@ -65,12 +65,12 @@ public class InOut {
         return carriages;
     }
 
-    public void write(CarriagesList carriages) {
-        writeCsv(carriages, dataPath);
+    public void write(CarriagesList carriages, int year) {
+        writeCsv(carriages, dataPath +  year + "_carriagesList.csv");
 
-        CarriagesList carriagesAlt = readCsv(dataAltPath);
+        CarriagesList carriagesAlt = readCsv(dataAltPath +  year + "_carriagesList.csv");
         if (carriagesAlt == null || carriages.getCarriages().size() >= carriagesAlt.getCarriages().size())
-            writeCsv(carriages, dataAltPath);
+            writeCsv(carriages, dataAltPath +  year + "_carriagesList.csv");
     }
 
     private void writeCsv(CarriagesList carriages, String path) {
@@ -115,12 +115,7 @@ public class InOut {
         try (OutputStream os = new FileOutputStream(reportOutPath)) {
             os.write(builder.toString().getBytes("Cp1251"));
         } catch (IOException e) {
-            try (OutputStream os = new FileOutputStream(reportOutPathAlt)) {
-                os.write(builder.toString().getBytes("Cp1251"));
-            } catch (IOException e1) {
-                e.printStackTrace();
-                e1.printStackTrace();
-            }
+            e.printStackTrace();
         }
     }
 }
