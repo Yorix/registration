@@ -3,7 +3,10 @@ package com.yorix.registration.controllers;
 import com.yorix.registration.Broker;
 import com.yorix.registration.Carriage;
 import com.yorix.registration.CarriagesList;
+import com.yorix.registration.Main;
 import com.yorix.registration.io.InOut;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -25,10 +28,13 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
+    @FXML
+    private ChoiceBox<Locale> chbLang;
     @FXML
     private Label lblCount;
     @FXML
@@ -59,6 +65,11 @@ public class MainController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         bundle = resources;
+
+        ObservableList<Locale> locales = FXCollections.observableArrayList(new Locale("ru"), new Locale("ua"), new Locale("en"));
+        chbLang.setItems(locales);
+        chbLang.getSelectionModel().select(bundle.getLocale());
+
         inOut = new InOut(resources);
         carriagesList = inOut.read(LocalDate.now().getYear());
 
@@ -82,6 +93,19 @@ public class MainController implements Initializable {
     }
 
     private void initListeners() {
+        chbLang.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.equals(new Locale("ru"))) {
+                mainStage.close();
+                new Main().reRun("ru", mainStage);
+            } else if (newValue.equals(new Locale("ua"))) {
+                mainStage.close();
+                new Main().reRun("ua", mainStage);
+            } else if (newValue.equals(new Locale("en"))) {
+                mainStage.close();
+                new Main().reRun("en", mainStage);
+            }
+        });
+
         dtpFrom.getEditor().textProperty().addListener(
                 (observable, oldVal, newVal) ->
                         from = LocalDate.parse(newVal, DateTimeFormatter.ofPattern("dd.MM.yyyy"))

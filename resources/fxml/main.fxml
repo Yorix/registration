@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
@@ -15,6 +16,10 @@
         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
     </padding>
     <AnchorPane>
+        <Button mnemonicParsing="false" onAction="#showCreateReportWindow" prefWidth="200.0" text="%btn.createReport" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
+      <ChoiceBox fx:id="chbLang" AnchorPane.rightAnchor="350.0" />
+      <Button mnemonicParsing="false" onAction="#saveBase" prefWidth="150.0" text="%btn.saveBase" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="35.0" />
+      <Button mnemonicParsing="false" onAction="#loadBase" prefWidth="150.0" text="%btn.loadBase" AnchorPane.leftAnchor="160.0" AnchorPane.topAnchor="35.0" />
         <HBox layoutY="35.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
             <Button mnemonicParsing="false" onAction="#addCarriage" prefWidth="80.0" text="%btn.addNote" />
             <Button mnemonicParsing="false" onAction="#editCarriage" prefWidth="80.0" text="%btn.editNote" />
@@ -37,6 +42,10 @@
                 </AnchorPane>
             </VBox>
         </HBox>
+        <HBox layoutX="406.0" layoutY="78.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="150.0">
+            <Label text="%lbl.count" />
+            <Label fx:id="lblCount" />
+        </HBox>
         <VBox layoutY="70.0" spacing="10.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <HBox spacing="5.0">
                 <Button fx:id="btnShowBroker1" mnemonicParsing="false" onAction="#showCarriages" prefWidth="120.0" text="%btn.showBroker1" />
@@ -48,13 +57,6 @@
                 <Button fx:id="btnShowAll" mnemonicParsing="false" onAction="#showCarriages" prefWidth="120.0" text="%btn.showAll" />
             </HBox>
         </VBox>
-        <Button mnemonicParsing="false" onAction="#showCreateReportWindow" prefWidth="200.0" text="%btn.createReport" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
-      <Button mnemonicParsing="false" onAction="#saveBase" prefWidth="150.0" text="%btn.saveBase" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="35.0" />
-      <Button mnemonicParsing="false" onAction="#loadBase" prefWidth="150.0" text="%btn.loadBase" AnchorPane.leftAnchor="160.0" AnchorPane.topAnchor="35.0" />
-        <HBox layoutX="406.0" layoutY="78.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="150.0">
-            <Label text="%lbl.count" />
-            <Label fx:id="lblCount" />
-        </HBox>
     </AnchorPane>
     <TableView fx:id="tblCarriages" VBox.vgrow="ALWAYS">
         <columns>
