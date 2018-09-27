@@ -15,9 +15,11 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
@@ -57,7 +59,7 @@ public class MainController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         bundle = resources;
-        inOut = new InOut();
+        inOut = new InOut(resources);
         carriagesList = inOut.read(LocalDate.now().getYear());
 
         to = LocalDate.now();
@@ -89,7 +91,7 @@ public class MainController implements Initializable {
                 (observable, oldVal, newVal) -> {
                     to = LocalDate.parse(newVal, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
                     if (from.getYear() != Integer.valueOf(newVal.substring(6))) {
-                        editDialogController.showAlert(bundle.getString("report.wrongYear"));
+                        PopUp.showAlert(bundle.getString("report.wrongYear"));
                         from = LocalDate.of(to.getYear(), 1, 1);
                         dtpFrom.setValue(from);
                     }
@@ -236,5 +238,22 @@ public class MainController implements Initializable {
 
         createReportStage.getScene().getStylesheets().add("styles/main.css");
         createReportStage.show();
+    }
+
+    public void saveBase() {
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        File file = directoryChooser.showDialog(this.mainStage);
+        if (file != null)
+            inOut.copyBase(null, file.toString());
+    }
+
+    public void loadBase() {
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        File file = directoryChooser.showDialog(this.mainStage);
+        if (file != null)
+            inOut.copyBase(file.toString(), null);
+
+        carriagesList = inOut.read(LocalDate.now().getYear());
+        showCarriages(new ActionEvent(btnShowAll, null));
     }
 }

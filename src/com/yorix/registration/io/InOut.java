@@ -3,38 +3,51 @@ package com.yorix.registration.io;
 import com.yorix.registration.Broker;
 import com.yorix.registration.Carriage;
 import com.yorix.registration.CarriagesList;
+import com.yorix.registration.controllers.PopUp;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.ResourceBundle;
 
 public class InOut {
     private String dataPath;
     private String dataAltPath;
     private String reportOutPath;
+    private String sprtr;
 
-    public InOut() {
-        String fileSeparator = System.getProperty("file.separator");
-        dataPath = "C:/ProgramData/Registration/";
-        dataAltPath = System.getProperty("user.home") + fileSeparator + "Documents" + fileSeparator + "Registration" + fileSeparator;
-        reportOutPath = System.getProperty("user.home") + fileSeparator + "Desktop" + fileSeparator + "REPORT.csv";
+    private ResourceBundle bundle;
 
-        File altFolder = new File((dataPath));
-        if (!altFolder.exists())
-            altFolder.mkdir();
 
-        File folder = new File(dataAltPath);
+    public InOut(ResourceBundle bundle) {
+        this.bundle = bundle;
+
+        sprtr = System.getProperty("file.separator");
+        dataPath = "C:" + sprtr + "ProgramData" + sprtr + "Registration" + sprtr;
+        dataAltPath = System.getProperty("user.home") + sprtr + "Documents" + sprtr + "Registration" + sprtr;
+        reportOutPath = System.getProperty("user.home") + sprtr + "Desktop" + sprtr + "REPORT.csv";
+
+        File folder = new File(dataPath);
         if (!folder.exists())
             folder.mkdir();
+
+        File altFolder = new File((dataAltPath));
+        if (!altFolder.exists())
+            altFolder.mkdir();
     }
 
 
     public CarriagesList read(int year) {
         CarriagesList carriages;
         carriages = readCsv(dataPath + year + "_carriagesList.csv");
-        if (carriages == null)
-            carriages = readCsv(dataAltPath +  year + "_carriagesList.csv");
+        if (carriages == null) {
+            carriages = readCsv(dataAltPath + year + "_carriagesList.csv");
+            copyBase(dataAltPath, dataPath);
+        }
         if (carriages == null)
             carriages = new CarriagesList();
         return carriages;
@@ -66,11 +79,8 @@ public class InOut {
     }
 
     public void write(CarriagesList carriages, int year) {
-        writeCsv(carriages, dataPath +  year + "_carriagesList.csv");
-
-        CarriagesList carriagesAlt = readCsv(dataAltPath +  year + "_carriagesList.csv");
-        if (carriagesAlt == null || carriages.getCarriages().size() >= carriagesAlt.getCarriages().size())
-            writeCsv(carriages, dataAltPath +  year + "_carriagesList.csv");
+        writeCsv(carriages, dataPath + year + "_carriagesList.csv");
+        writeCsv(carriages, dataAltPath + year + "_carriagesList.csv");
     }
 
     private void writeCsv(CarriagesList carriages, String path) {
@@ -86,6 +96,34 @@ public class InOut {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void copyBase(String source, String target) {
+
+        if (source == null) source = dataPath;
+        if (target == null) target = dataAltPath;
+
+        File folder = new File(target);
+        if (!folder.exists())
+            folder.mkdir();
+
+        Path pathTarget = new File(target).toPath();
+
+        File sourceFile = new File(source);
+        File[] listOfFiles = sourceFile.listFiles();
+        if (listOfFiles != null) {
+            for (File file : listOfFiles) {
+                if (file.getName().matches("\\d{4}_carriagesList\\.csv")) {
+                    try {
+                        Files.copy(file.toPath(), pathTarget.resolve(file.getName()), StandardCopyOption.REPLACE_EXISTING);
+                    } catch (IOException e) {
+                        PopUp.showAlert(bundle.getString("report.saveError"));
+                        e.printStackTrace();
+                        return;
+                    }
+                }
+            }
         }
     }
 

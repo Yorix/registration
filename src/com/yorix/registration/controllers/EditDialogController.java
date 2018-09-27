@@ -41,7 +41,7 @@ public class EditDialogController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         bundle = resources;
-        inOut = new InOut();
+        inOut = new InOut(resources);
         chbCountryCode.setItems(FXCollections.observableArrayList("+380", "+373"));
         chbCountryCode.getSelectionModel().selectFirst();
         ToggleGroup brokers = new ToggleGroup();
@@ -168,7 +168,7 @@ public class EditDialogController implements Initializable {
 
     public void execute() {
         if (txtCarId.getText().isEmpty()) {
-            showAlert(bundle.getString("report.carNumberError"));
+            PopUp.showAlert(bundle.getString("report.carNumberError"));
             return;
         }
 
@@ -176,7 +176,7 @@ public class EditDialogController implements Initializable {
         String phone = txtPhoneNum.getText();
 
         if (!phone.matches(pattern)) {
-            showAlert(bundle.getString("report.phoneNumberError"));
+            PopUp.showAlert(bundle.getString("report.phoneNumberError"));
             return;
         }
 
@@ -184,12 +184,12 @@ public class EditDialogController implements Initializable {
         if (rdbPolitrans.isSelected()) broker = Broker.POLITRANS;
         else if (rdbExim.isSelected()) broker = Broker.EXIM;
         else {
-            showAlert(bundle.getString("report.emptyBroker"));
+            PopUp.showAlert(bundle.getString("report.emptyBroker"));
             return;
         }
 
         if (txtTime.getText().length() < 5) {
-            showAlert(bundle.getString("report.incorrectTime"));
+            PopUp.showAlert(bundle.getString("report.incorrectTime"));
             return;
         }
 
@@ -216,7 +216,10 @@ public class EditDialogController implements Initializable {
 
         if (carriagesList.getSize() > 0)
             if (currentCarriage.getDate().getYear() != carriagesList.getCarriages().get(0).getDate().getYear()) {
+                carriagesList.delete(currentCarriage);
+                inOut.write(carriagesList, carriagesList.getCarriages().get(0).getDate().getYear());
                 carriagesList = inOut.read(currentCarriage.getDate().getYear());
+                carriagesList.add(currentCarriage);
             }
 
         if (isNew)
@@ -233,14 +236,6 @@ public class EditDialogController implements Initializable {
         inOut.write(carriagesList, currentCarriage.getDate().getYear());
         clearFields();
         currentStage.hide();
-    }
-
-    void showAlert(String message) {
-        Alert dialog = new Alert(Alert.AlertType.INFORMATION);
-        dialog.setTitle(message);
-        dialog.setHeaderText(message);
-        dialog.getDialogPane().getScene().getStylesheets().add("styles/main.css");
-        dialog.show();
     }
 
     void clearFields() {
