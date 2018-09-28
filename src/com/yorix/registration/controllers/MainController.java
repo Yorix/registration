@@ -44,7 +44,7 @@ public class MainController implements Initializable {
     @FXML
     private TableView<Carriage> tblCarriages;
     @FXML
-    private TableColumn<Carriage, String> tblClmDate, tblClmCarNumber, tblClmPhoneNumber, tblClmConsignee, tblClmDeclarationId;
+    private TableColumn<Carriage, String> tblClmDate, tblClmCarNumber, tblClmPhoneNumber, tblClmConsignee, tblClmDeclarationId, tblClmAdditionalInfo;
     @FXML
     private TableColumn<Carriage, Broker> tblClmBroker;
 
@@ -70,7 +70,7 @@ public class MainController implements Initializable {
         chbLang.setItems(locales);
         chbLang.getSelectionModel().select(bundle.getLocale());
 
-        inOut = new InOut(resources);
+        inOut = new InOut();
         carriagesList = inOut.read(LocalDate.now().getYear());
 
         to = LocalDate.now();
@@ -84,7 +84,8 @@ public class MainController implements Initializable {
         tblClmConsignee.setCellValueFactory(new PropertyValueFactory<>("consignee"));
         tblClmBroker.setCellValueFactory(new PropertyValueFactory<>("broker"));
         tblClmDeclarationId.setCellValueFactory(new PropertyValueFactory<>("declarationId"));
-        tblCarriages.setItems(carriagesList.createOptionalList(from, to, null));
+        tblClmAdditionalInfo.setCellValueFactory(new PropertyValueFactory<>("additionalInformation"));
+        tblCarriages.setItems(carriagesList.getOptionalList(from, to, null));
         tblCarriages.scrollTo(carriagesList.getSize());
         lblCount.setText(Integer.toString(carriagesList.getSize()));
 
@@ -107,8 +108,7 @@ public class MainController implements Initializable {
         });
 
         dtpFrom.getEditor().textProperty().addListener(
-                (observable, oldVal, newVal) ->
-                        from = LocalDate.parse(newVal, DateTimeFormatter.ofPattern("dd.MM.yyyy"))
+                (observable, oldVal, newVal) -> from = LocalDate.parse(newVal, DateTimeFormatter.ofPattern("dd.MM.yyyy"))
         );
 
         dtpTo.getEditor().textProperty().addListener(
@@ -126,6 +126,7 @@ public class MainController implements Initializable {
             if (event.getClickCount() == 2) editCarriage(tblCarriages.getSelectionModel().getSelectedItem());
         });
     }
+
 
     private void initLoaders() {
         editDialogLoader = new FXMLLoader(getClass().getResource("/fxml/editDialog.fxml"));
@@ -169,9 +170,8 @@ public class MainController implements Initializable {
         Optional<ButtonType> option = dialog.showAndWait();
 
         if (option.get() == ButtonType.OK) {
-            int year = current.getDate().getYear();
             carriagesList.delete(current);
-            inOut.write(carriagesList, year);
+            inOut.write(carriagesList, current.getDate().getYear());
         }
     }
 
@@ -196,18 +196,16 @@ public class MainController implements Initializable {
 
     public void showCarriages(ActionEvent actionEvent) {
 
-        carriagesList = inOut.read(from.getYear());
-
         if (actionEvent.getSource() == btnShowBroker1) {
-            tblCarriages.setItems(carriagesList.createOptionalList(from, to, Broker.POLITRANS));
+            tblCarriages.setItems(carriagesList.getOptionalList(from, to, Broker.POLITRANS));
             carriagesList.setCurrentBroker(Broker.POLITRANS);
 
         } else if (actionEvent.getSource() == btnShowBroker2) {
-            tblCarriages.setItems(carriagesList.createOptionalList(from, to, Broker.EXIM));
+            tblCarriages.setItems(carriagesList.getOptionalList(from, to, Broker.EXIM));
             carriagesList.setCurrentBroker(Broker.EXIM);
 
         } else if (actionEvent.getSource() == btnShowAll) {
-            tblCarriages.setItems(carriagesList.createOptionalList(from, to, null));
+            tblCarriages.setItems(carriagesList.getOptionalList(from, to, null));
             carriagesList.setCurrentBroker(null);
         }
 
@@ -216,48 +214,49 @@ public class MainController implements Initializable {
     }
 
     public void showCreateReportWindow() {
-        List<Carriage> listForReport = carriagesList.getOptional();
+        if (createReportStage == null) {
+            CheckBox carNumber = new CheckBox(bundle.getString("lbl.carNum"));
+            CheckBox phoneNumber = new CheckBox(bundle.getString("lbl.phoneNum"));
+            CheckBox consignee = new CheckBox(bundle.getString("lbl.consignee"));
+            CheckBox broker = new CheckBox(bundle.getString("tbl.clm.broker"));
+            CheckBox declarationId = new CheckBox(bundle.getString("lbl.decId"));
+            CheckBox additionalInformation = new CheckBox(bundle.getString("lbl.additionalInformation"));
 
-        CheckBox carNumber = new CheckBox(bundle.getString("lbl.carNum"));
-        CheckBox phoneNumber = new CheckBox(bundle.getString("lbl.phoneNum"));
-        CheckBox consignee = new CheckBox(bundle.getString("lbl.consignee"));
-        CheckBox broker = new CheckBox(bundle.getString("tbl.clm.broker"));
-        CheckBox declarationId = new CheckBox(bundle.getString("lbl.decId"));
-        CheckBox additionalInformation = new CheckBox(bundle.getString("lbl.additionalInformation"));
+            carNumber.setSelected(true);
+            consignee.setSelected(true);
+            additionalInformation.setSelected(true);
 
-        carNumber.setSelected(true);
-        consignee.setSelected(true);
-        additionalInformation.setSelected(true);
+            VBox vBox1 = new VBox(10, carNumber, consignee, declarationId);
+            VBox vBox2 = new VBox(10, phoneNumber, broker, additionalInformation);
+            HBox hBox = new HBox(20, vBox1, vBox2);
 
-        VBox vBox1 = new VBox(10, carNumber, consignee, declarationId);
-        VBox vBox2 = new VBox(10, phoneNumber, broker, additionalInformation);
-        HBox hBox = new HBox(20, vBox1, vBox2);
+            Button btnOk = new Button("OK");
+            List<Carriage> listForReport = carriagesList.getOptionalList(from, to, carriagesList.getCurrentBroker());
 
-        Button btnOk = new Button("OK");
+            VBox root = new VBox(10, hBox, btnOk);
+            root.setPadding(new Insets(10));
 
-        VBox root = new VBox(10, hBox, btnOk);
-        root.setPadding(new Insets(10));
+            createReportStage = new Stage();
+            createReportStage.setResizable(false);
+            createReportStage.setScene(new Scene(root));
+            createReportStage.initModality(Modality.WINDOW_MODAL);
+            createReportStage.initOwner(mainStage);
+            createReportStage.setTitle(bundle.getString("btn.createReport"));
 
-        createReportStage = new Stage();
-        createReportStage.setResizable(false);
-        createReportStage.setScene(new Scene(root));
-        createReportStage.initModality(Modality.WINDOW_MODAL);
-        createReportStage.initOwner(mainStage);
-        createReportStage.setTitle(bundle.getString("btn.createReport"));
-
-        btnOk.setOnMouseClicked(event -> {
-            inOut.createReport(
-                    listForReport,
-                    true,
-                    carNumber.isSelected(),
-                    phoneNumber.isSelected(),
-                    consignee.isSelected(),
-                    broker.isSelected(),
-                    declarationId.isSelected(),
-                    additionalInformation.isSelected()
-            );
-            createReportStage.close();
-        });
+            btnOk.setOnMouseClicked(event -> {
+                inOut.createReport(
+                        listForReport,
+                        true,
+                        carNumber.isSelected(),
+                        phoneNumber.isSelected(),
+                        consignee.isSelected(),
+                        broker.isSelected(),
+                        declarationId.isSelected(),
+                        additionalInformation.isSelected()
+                );
+                createReportStage.hide();
+            });
+        }
 
         createReportStage.getScene().getStylesheets().add("styles/main.css");
         createReportStage.show();
@@ -277,6 +276,7 @@ public class MainController implements Initializable {
             inOut.copyBase(file.toString(), null);
 
         carriagesList = inOut.read(LocalDate.now().getYear());
+        editDialogController.setCarriages(carriagesList);
         showCarriages(new ActionEvent(btnShowAll, null));
     }
 }

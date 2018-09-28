@@ -41,7 +41,7 @@ public class EditDialogController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         bundle = resources;
-        inOut = new InOut(resources);
+        inOut = new InOut();
         chbCountryCode.setItems(FXCollections.observableArrayList("+380", "+373"));
         chbCountryCode.getSelectionModel().selectFirst();
         ToggleGroup brokers = new ToggleGroup();
@@ -213,14 +213,12 @@ public class EditDialogController implements Initializable {
         currentCarriage.setAdditionalInformation(txtAdditionalInformation.getText());
         currentCarriage.setDate(LocalDateTime.parse(dateTime, DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")));
 
-
-        if (carriagesList.getSize() > 0)
-            if (currentCarriage.getDate().getYear() != carriagesList.getCarriages().get(0).getDate().getYear()) {
-                carriagesList.delete(currentCarriage);
-                inOut.write(carriagesList, carriagesList.getCarriages().get(0).getDate().getYear());
-                carriagesList = inOut.read(currentCarriage.getDate().getYear());
-                carriagesList.add(currentCarriage);
-            }
+        if (carriagesList.getSize() > 0 && currentCarriage.getDate().getYear() != carriagesList.getCarriages().get(0).getDate().getYear()) {
+            carriagesList.delete(currentCarriage);
+            inOut.write(carriagesList, carriagesList.getCarriages().get(0).getDate().getYear());
+            carriagesList = inOut.read(currentCarriage.getDate().getYear());
+            carriagesList.add(currentCarriage);
+        }
 
         if (isNew)
             carriagesList.add(currentCarriage);

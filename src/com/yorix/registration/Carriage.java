@@ -13,15 +13,16 @@ public class Carriage {
     private SimpleStringProperty consignee;
     private SimpleStringProperty broker;
     private SimpleStringProperty declarationId;
-    private String additionalInformation;
+    private SimpleStringProperty additionalInformation;
 
     public Carriage() {
-        this.date = new SimpleStringProperty();
-        this.carNumber = new SimpleStringProperty();
-        this.phoneNumber = new SimpleStringProperty();
-        this.consignee = new SimpleStringProperty();
-        this.broker = new SimpleStringProperty();
-        this.declarationId = new SimpleStringProperty();
+        date = new SimpleStringProperty();
+        carNumber = new SimpleStringProperty();
+        phoneNumber = new SimpleStringProperty();
+        consignee = new SimpleStringProperty();
+        broker = new SimpleStringProperty();
+        declarationId = new SimpleStringProperty();
+        additionalInformation = new SimpleStringProperty();
     }
 
     public Carriage(LocalDateTime date,
@@ -37,7 +38,7 @@ public class Carriage {
         this.consignee = new SimpleStringProperty(consignee);
         this.broker = new SimpleStringProperty(broker.toString());
         this.declarationId = new SimpleStringProperty(declarationId);
-        this.additionalInformation = additionalInformation;
+        this.additionalInformation = new SimpleStringProperty(additionalInformation);
     }
 
     public LocalDateTime getDate() {
@@ -113,11 +114,15 @@ public class Carriage {
     }
 
     public String getAdditionalInformation() {
+        return additionalInformation.get();
+    }
+
+    public SimpleStringProperty additionalInformationProperty() {
         return additionalInformation;
     }
 
     public void setAdditionalInformation(String additionalInformation) {
-        this.additionalInformation = additionalInformation;
+        this.additionalInformation.set(additionalInformation);
     }
 
     @Override

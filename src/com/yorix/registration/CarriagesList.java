@@ -46,7 +46,7 @@ public class CarriagesList {
         return carriages;
     }
 
-    public ObservableList<Carriage> createOptionalList(LocalDate from, LocalDate to, Broker broker) {
+    public ObservableList<Carriage> getOptionalList(LocalDate from, LocalDate to, Broker broker) {
         if (optional == null) optional = FXCollections.observableArrayList();
         optional.clear();
         carriages.stream()
@@ -57,11 +57,17 @@ public class CarriagesList {
         return optional;
     }
 
-    public ObservableList<Carriage> getOptional() {
-        return optional;
-    }
-
     public int getSize() {
         return optional.size();
     }
+
+//    @Override
+//    public String toString() {
+//        StringBuilder builder = new StringBuilder();
+//        for (Carriage carriage : carriages) {
+//            builder.append(carriage).append("\n");
+//        }
+//        builder.deleteCharAt(builder.length() - 1);
+//        return builder.toString();
+//    }
 }
