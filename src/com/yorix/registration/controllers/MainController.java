@@ -84,7 +84,7 @@ public class MainController implements Initializable {
         tblClmConsignee.setCellValueFactory(new PropertyValueFactory<>("consignee"));
         tblClmBroker.setCellValueFactory(new PropertyValueFactory<>("broker"));
         tblClmDeclarationId.setCellValueFactory(new PropertyValueFactory<>("declarationId"));
-        tblCarriages.setItems(carriagesList.getOptionalList(from, to, null));
+        tblCarriages.setItems(carriagesList.createOptionalList(from, to, null));
         tblCarriages.scrollTo(carriagesList.getSize());
         lblCount.setText(Integer.toString(carriagesList.getSize()));
 
@@ -199,15 +199,15 @@ public class MainController implements Initializable {
         carriagesList = inOut.read(from.getYear());
 
         if (actionEvent.getSource() == btnShowBroker1) {
-            tblCarriages.setItems(carriagesList.getOptionalList(from, to, Broker.POLITRANS));
+            tblCarriages.setItems(carriagesList.createOptionalList(from, to, Broker.POLITRANS));
             carriagesList.setCurrentBroker(Broker.POLITRANS);
 
         } else if (actionEvent.getSource() == btnShowBroker2) {
-            tblCarriages.setItems(carriagesList.getOptionalList(from, to, Broker.EXIM));
+            tblCarriages.setItems(carriagesList.createOptionalList(from, to, Broker.EXIM));
             carriagesList.setCurrentBroker(Broker.EXIM);
 
         } else if (actionEvent.getSource() == btnShowAll) {
-            tblCarriages.setItems(carriagesList.getOptionalList(from, to, null));
+            tblCarriages.setItems(carriagesList.createOptionalList(from, to, null));
             carriagesList.setCurrentBroker(null);
         }
 
@@ -216,49 +216,48 @@ public class MainController implements Initializable {
     }
 
     public void showCreateReportWindow() {
-        if (createReportStage == null) {
-            CheckBox carNumber = new CheckBox(bundle.getString("lbl.carNum"));
-            CheckBox phoneNumber = new CheckBox(bundle.getString("lbl.phoneNum"));
-            CheckBox consignee = new CheckBox(bundle.getString("lbl.consignee"));
-            CheckBox broker = new CheckBox(bundle.getString("tbl.clm.broker"));
-            CheckBox declarationId = new CheckBox(bundle.getString("lbl.decId"));
-            CheckBox additionalInformation = new CheckBox(bundle.getString("lbl.additionalInformation"));
+        List<Carriage> listForReport = carriagesList.getOptional();
 
-            carNumber.setSelected(true);
-            consignee.setSelected(true);
-            additionalInformation.setSelected(true);
+        CheckBox carNumber = new CheckBox(bundle.getString("lbl.carNum"));
+        CheckBox phoneNumber = new CheckBox(bundle.getString("lbl.phoneNum"));
+        CheckBox consignee = new CheckBox(bundle.getString("lbl.consignee"));
+        CheckBox broker = new CheckBox(bundle.getString("tbl.clm.broker"));
+        CheckBox declarationId = new CheckBox(bundle.getString("lbl.decId"));
+        CheckBox additionalInformation = new CheckBox(bundle.getString("lbl.additionalInformation"));
 
-            VBox vBox1 = new VBox(10, carNumber, consignee, declarationId);
-            VBox vBox2 = new VBox(10, phoneNumber, broker, additionalInformation);
-            HBox hBox = new HBox(20, vBox1, vBox2);
+        carNumber.setSelected(true);
+        consignee.setSelected(true);
+        additionalInformation.setSelected(true);
 
-            Button btnOk = new Button("OK");
-            List<Carriage> listForReport = carriagesList.getOptionalList(from, to, carriagesList.getCurrentBroker());
+        VBox vBox1 = new VBox(10, carNumber, consignee, declarationId);
+        VBox vBox2 = new VBox(10, phoneNumber, broker, additionalInformation);
+        HBox hBox = new HBox(20, vBox1, vBox2);
 
-            VBox root = new VBox(10, hBox, btnOk);
-            root.setPadding(new Insets(10));
+        Button btnOk = new Button("OK");
 
-            createReportStage = new Stage();
-            createReportStage.setResizable(false);
-            createReportStage.setScene(new Scene(root));
-            createReportStage.initModality(Modality.WINDOW_MODAL);
-            createReportStage.initOwner(mainStage);
-            createReportStage.setTitle(bundle.getString("btn.createReport"));
+        VBox root = new VBox(10, hBox, btnOk);
+        root.setPadding(new Insets(10));
 
-            btnOk.setOnMouseClicked(event -> {
-                inOut.createReport(
-                        listForReport,
-                        true,
-                        carNumber.isSelected(),
-                        phoneNumber.isSelected(),
-                        consignee.isSelected(),
-                        broker.isSelected(),
-                        declarationId.isSelected(),
-                        additionalInformation.isSelected()
-                );
-                createReportStage.hide();
-            });
-        }
+        createReportStage = new Stage();
+        createReportStage.setResizable(false);
+        createReportStage.setScene(new Scene(root));
+        createReportStage.initModality(Modality.WINDOW_MODAL);
+        createReportStage.initOwner(mainStage);
+        createReportStage.setTitle(bundle.getString("btn.createReport"));
+
+        btnOk.setOnMouseClicked(event -> {
+            inOut.createReport(
+                    listForReport,
+                    true,
+                    carNumber.isSelected(),
+                    phoneNumber.isSelected(),
+                    consignee.isSelected(),
+                    broker.isSelected(),
+                    declarationId.isSelected(),
+                    additionalInformation.isSelected()
+            );
+            createReportStage.close();
+        });
 
         createReportStage.getScene().getStylesheets().add("styles/main.css");
         createReportStage.show();
