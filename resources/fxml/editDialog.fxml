@@ -58,7 +58,7 @@
     <AnchorPane layoutX="20.0" layoutY="125.0">
         <VBox layoutX="96.0" AnchorPane.leftAnchor="0.0">
             <Label text="%lbl.additionalInformation" />
-            <TextArea fx:id="txtAdditionalInformation" prefHeight="100.0" prefWidth="250.0" />
+            <TextField fx:id="txtAdditionalInformation" prefWidth="250.0" />
         </VBox>
     </AnchorPane>
     <AnchorPane>

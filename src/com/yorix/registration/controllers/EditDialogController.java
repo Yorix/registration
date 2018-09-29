@@ -23,11 +23,9 @@ public class EditDialogController implements Initializable {
     @FXML
     private DatePicker currentDate;
     @FXML
-    private TextArea txtAdditionalInformation;
-    @FXML
     private ChoiceBox<String> chbCountryCode;
     @FXML
-    private TextField txtCarId, txtPhoneNum, txtConsignee, txtDecId;
+    private TextField txtCarId, txtPhoneNum, txtConsignee, txtDecId, txtAdditionalInformation;
     @FXML
     private RadioButton rdbPolitrans, rdbExim;
 
